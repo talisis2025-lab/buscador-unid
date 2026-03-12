@@ -6,10 +6,9 @@
     <title>Buscador Interno - UNID</title>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
-        /* Diseño Base: Limpio y Fresco */
         body { 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #f9f9fa; /* Un blanco muy suave para que resalte el contenedor */
+            background-color: #f9f9fa; 
             color: #333;
             margin: 0;
             padding: 40px 20px;
@@ -17,7 +16,6 @@
             justify-content: center;
         }
 
-        /* Contenedor Principal: Blanco puro, elegante y con sombra suave */
         .contenedor { 
             background: #ffffff; 
             padding: 40px; 
@@ -25,9 +23,9 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.06); 
             width: 100%; 
             max-width: 550px; 
+            position: relative; /* Necesario para posicionar la firma */
         }
 
-        /* Título con toque Amarillo UNID */
         h2 { 
             text-align: center; 
             margin-top: 0; 
@@ -37,14 +35,13 @@
             color: #222;
         }
         h2 strong {
-            color: #FFC300; /* Amarillo elegante */
+            color: #FFC300; 
             font-weight: 700;
         }
 
         .seccion { margin-bottom: 25px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #666; font-size: 0.95em; }
         
-        /* Inputs modernos */
         input[type="file"] {
             width: 100%;
             padding: 10px;
@@ -75,7 +72,6 @@
             box-shadow: 0 0 0 3px rgba(255, 195, 0, 0.15); 
         }
 
-        /* Botón de Buscar */
         .btn-buscar { 
             padding: 14px; 
             background-color: #FFC300; 
@@ -93,8 +89,7 @@
             box-shadow: 0 4px 12px rgba(255, 195, 0, 0.3);
         }
 
-        /* Tarjetas de Resultados (Efecto Hover 3D) */
-        #resultado { margin-top: 30px; min-height: 100px; }
+        #resultado { margin-top: 30px; min-height: 100px; padding-bottom: 20px; }
         
         .result-card { 
             background: #ffffff; 
@@ -118,7 +113,6 @@
             margin-bottom: 15px;
         }
 
-        /* Botón Wiki Estilizado (Contorno amarillo que se rellena al pasar el mouse) */
         .btn-wiki { 
             display: inline-block; 
             padding: 10px 20px; 
@@ -138,6 +132,16 @@
 
         .status-ok { color: #5F6368; font-size: 0.9em; margin-top: 8px; display: block; font-style: italic; }
         .sin-wiki { color: #888; font-size: 0.9em; font-style: italic; }
+
+        .firma-nabil {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 0.75em;
+            color: #bbb;
+            font-style: italic;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -162,12 +166,13 @@
     <div id="resultado">
         <p style="color: #aaa; text-align: center;">Los resultados aparecerán aquí.</p>
     </div>
+
+    <div class="firma-nabil">~Powered By Nabil Q</div>
 </div>
 
 <script>
     let todosLosDatos = [];
 
-    // LECTURA DEL EXCEL
     document.getElementById('archivosExcel').addEventListener('change', function(e) {
         const archivos = e.target.files;
         if (archivos.length === 0) return;
@@ -195,7 +200,6 @@
         });
     });
 
-    // BÚSQUEDA  
     function buscarInstituto() {
         const busqueda = document.getElementById('textoBusqueda').value.toLowerCase().trim();
         const caja = document.getElementById('resultado');
@@ -219,7 +223,6 @@
 
             resultados.forEach(encontrado => {
                 let linkWiki = null;
-                
                 Object.keys(encontrado).forEach(columna => {
                     let nomCol = columna.toLowerCase().trim();
                     if (nomCol.includes("wiki") || nomCol.includes("link") || nomCol.includes("url")) {
@@ -228,7 +231,6 @@
                 });
 
                 const nombreReal = encontrado.Nombre;
-
                 let htmlResultado = `
                     <div class="result-card">
                         <div class="instituto-nombre">${nombreReal}</div>
@@ -239,7 +241,6 @@
                     if (!urlFinal.startsWith('http')) {
                         urlFinal = 'https://' + urlFinal;
                     }
-
                     htmlResultado += `
                         <a href="${urlFinal}" target="_blank" class="btn-wiki">
                             🌐 Abrir Wiki
@@ -254,7 +255,6 @@
             });
 
             caja.innerHTML = htmlTotal;
-
         } else {
             caja.innerHTML = `
                 <div style="text-align:center; padding: 20px; background: #fffcf0; border-radius: 8px; color: #8a6d3b;">
