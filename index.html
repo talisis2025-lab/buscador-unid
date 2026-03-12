@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador Interno - UNID</title>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <style>
+        /* Diseño Base: Limpio y Fresco */
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #f9f9fa; /* Un blanco muy suave para que resalte el contenedor */
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Contenedor Principal: Blanco puro, elegante y con sombra suave */
+        .contenedor { 
+            background: #ffffff; 
+            padding: 40px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06); 
+            width: 100%; 
+            max-width: 550px; 
+        }
+
+        /* Título con toque Amarillo UNID */
+        h2 { 
+            text-align: center; 
+            margin-top: 0; 
+            margin-bottom: 30px;
+            font-weight: 300; 
+            font-size: 2em;
+            color: #222;
+        }
+        h2 strong {
+            color: #FFC300; /* Amarillo elegante */
+            font-weight: 700;
+        }
+
+        .seccion { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #666; font-size: 0.95em; }
+        
+        /* Inputs modernos */
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background: #fdfdfd;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input[type="text"] { 
+            width: 100%; 
+            padding: 14px 16px; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            outline: none; 
+            font-size: 1em;
+            transition: all 0.3s; 
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus { 
+            border-color: #FFC300; 
+            box-shadow: 0 0 0 3px rgba(255, 195, 0, 0.15); 
+        }
+
+        /* Botón de Buscar */
+        .btn-buscar { 
+            padding: 14px; 
+            background-color: #FFC300; 
+            color: #222; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 1em;
+            transition: all 0.3s ease; 
+        }
+        .btn-buscar:hover { 
+            background-color: #e6b000; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 195, 0, 0.3);
+        }
+
+        /* Tarjetas de Resultados (Efecto Hover 3D) */
+        #resultado { margin-top: 30px; min-height: 100px; }
+        
+        .result-card { 
+            background: #ffffff; 
+            padding: 25px; 
+            border: 1px solid #f0f0f0;
+            border-left: 5px solid #FFC300; 
+            border-radius: 10px; 
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .instituto-nombre {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 15px;
+        }
+
+        /* Botón Wiki Estilizado (Contorno amarillo que se rellena al pasar el mouse) */
+        .btn-wiki { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            background-color: transparent; 
+            color: #222; 
+            text-decoration: none; 
+            border: 2px solid #FFC300;
+            border-radius: 6px; 
+            font-weight: 600; 
+            font-size: 0.9em;
+            transition: all 0.3s; 
+        }
+        .btn-wiki:hover { 
+            background-color: #FFC300; 
+            color: #000;
+        }
+
+        .status-ok { color: #5F6368; font-size: 0.9em; margin-top: 8px; display: block; font-style: italic; }
+        .sin-wiki { color: #888; font-size: 0.9em; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+    <h2>Buscador <strong>UNID</strong></h2>
+
+    <div class="seccion">
+        <label>1. Cargar Base de Datos (Excel)</label>
+        <input type="file" id="archivosExcel" accept=".xlsx, .xls" multiple>
+        <span id="statusCarga" class="status-ok">Esperando archivo...</span>
+    </div>
+
+    <div class="seccion">
+        <label>2. Buscar Documentación</label>
+        <div class="input-group">
+            <input type="text" id="textoBusqueda" placeholder="Escribe el nombre del instituto...">
+            <button class="btn-buscar" onclick="buscarInstituto()">Buscar</button>
+        </div>
+    </div>
+
+    <div id="resultado">
+        <p style="color: #aaa; text-align: center;">Los resultados aparecerán aquí.</p>
+    </div>
+</div>
+
+<script>
+    let todosLosDatos = [];
+
+    // LECTURA DEL EXCEL
+    document.getElementById('archivosExcel').addEventListener('change', function(e) {
+        const archivos = e.target.files;
+        if (archivos.length === 0) return;
+
+        todosLosDatos = [];
+        let procesados = 0;
+        document.getElementById('statusCarga').innerText = "Procesando archivo...";
+
+        Array.from(archivos).forEach(archivo => {
+            const lector = new FileReader();
+            lector.onload = function(evento) {
+                const data = new Uint8Array(evento.target.result);
+                const libro = XLSX.read(data, {type: 'array'});
+                const hoja = libro.Sheets[libro.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(hoja);
+                
+                todosLosDatos = todosLosDatos.concat(json);
+                procesados++;
+
+                if (procesados === archivos.length) {
+                    document.getElementById('statusCarga').innerHTML = "✔️ ¡Listo! " + todosLosDatos.length + " institutos cargados.";
+                }
+            };
+            lector.readAsArrayBuffer(archivo);
+        });
+    });
+
+    // BÚSQUEDA  
+    function buscarInstituto() {
+        const busqueda = document.getElementById('textoBusqueda').value.toLowerCase().trim();
+        const caja = document.getElementById('resultado');
+
+        if (todosLosDatos.length === 0) {
+            caja.innerHTML = `<p style="color:#d93025; text-align:center;">Por favor, carga el archivo Excel primero.</p>`;
+            return;
+        }
+
+        if (busqueda === "") {
+            caja.innerHTML = `<p style="color:#aaa; text-align:center;">Escribe algo para buscar.</p>`;
+            return;
+        }
+
+        const resultados = todosLosDatos.filter(fila => 
+            fila.Nombre && fila.Nombre.toString().toLowerCase().includes(busqueda)
+        );
+
+        if (resultados.length > 0) {
+            let htmlTotal = `<p style="color: #666; font-size: 0.85em; margin-bottom: 15px;">Se encontraron ${resultados.length} coincidencia(s):</p>`;
+
+            resultados.forEach(encontrado => {
+                let linkWiki = null;
+                
+                Object.keys(encontrado).forEach(columna => {
+                    let nomCol = columna.toLowerCase().trim();
+                    if (nomCol.includes("wiki") || nomCol.includes("link") || nomCol.includes("url")) {
+                        linkWiki = encontrado[columna];
+                    }
+                });
+
+                const nombreReal = encontrado.Nombre;
+
+                let htmlResultado = `
+                    <div class="result-card">
+                        <div class="instituto-nombre">${nombreReal}</div>
+                `;
+
+                if (linkWiki && linkWiki.toString().trim() !== "") {
+                    let urlFinal = linkWiki.toString().trim();
+                    if (!urlFinal.startsWith('http')) {
+                        urlFinal = 'https://' + urlFinal;
+                    }
+
+                    htmlResultado += `
+                        <a href="${urlFinal}" target="_blank" class="btn-wiki">
+                            🌐 Abrir Wiki
+                        </a>
+                    `;
+                } else {
+                    htmlResultado += `<span class="sin-wiki">Sin enlace disponible.</span>`;
+                }
+
+                htmlResultado += `</div>`;
+                htmlTotal += htmlResultado;
+            });
+
+            caja.innerHTML = htmlTotal;
+
+        } else {
+            caja.innerHTML = `
+                <div style="text-align:center; padding: 20px; background: #fffcf0; border-radius: 8px; color: #8a6d3b;">
+                    No se encontró nada para <strong>"${busqueda}"</strong>.
+                </div>
+            `;
+        }
+    }
+
+    document.getElementById('textoBusqueda').addEventListener('keypress', (e) => { 
+        if (e.key === 'Enter') buscarInstituto(); 
+    });
+</script>
+
+</body>
+</html>
