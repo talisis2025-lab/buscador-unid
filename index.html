@@ -3,136 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador Interno - UNID</title>
+    <title>Buscador Interno | UNID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
+        :root {
+            --primary: #FFC300;
+            --primary-dark: #e6b000;
+            --secondary: #1a1a1a;
+            --bg-body: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --border-color: #edf2f7;
+        }
+
         body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #f9f9fa; 
-            color: #333;
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main);
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px;
             display: flex;
             justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
         }
 
         .contenedor { 
-            background: #ffffff; 
+            background: var(--card-bg); 
             padding: 40px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.06); 
+            border-radius: 24px; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
             width: 100%; 
-            max-width: 550px; 
-            position: relative; 
+            max-width: 600px; 
+            margin-top: 40px;
+            position: relative;
         }
 
         h2 { 
             text-align: center; 
-            margin-top: 0; 
-            margin-bottom: 30px;
+            margin: 0 0 40px 0;
             font-weight: 300; 
-            font-size: 2em;
-            color: #222;
+            font-size: 2.2em;
+            letter-spacing: -1px;
         }
         h2 strong {
-            color: #FFC300; 
-            font-weight: 700;
+            color: var(--secondary); 
+            font-weight: 800;
+            border-bottom: 4px solid var(--primary);
         }
 
-        .seccion { margin-bottom: 25px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #666; font-size: 0.95em; }
+        .status-box {
+            background: #f8fafc;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        label { 
+            display: block; 
+            margin-bottom: 10px; 
+            font-weight: 600; 
+            color: var(--secondary); 
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         .input-group {
+            position: relative;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
         }
 
         input[type="text"] { 
             width: 100%; 
-            padding: 14px 16px; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 8px; 
+            padding: 16px 20px; 
+            border: 2px solid var(--border-color); 
+            border-radius: 14px; 
             outline: none; 
-            font-size: 1em;
-            transition: all 0.3s; 
+            font-size: 1.1em;
+            transition: all 0.2s ease; 
             box-sizing: border-box;
+            background: #fafafa;
         }
+        
         input[type="text"]:focus { 
-            border-color: #FFC300; 
-            box-shadow: 0 0 0 3px rgba(255, 195, 0, 0.15); 
+            border-color: var(--primary); 
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.1); 
         }
 
         .btn-buscar { 
-            padding: 14px; 
-            background-color: #FFC300; 
-            color: #222; 
+            padding: 16px; 
+            background-color: var(--secondary); 
+            color: white; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 14px; 
             cursor: pointer; 
-            font-weight: bold; 
+            font-weight: 700; 
             font-size: 1em;
-            transition: all 0.3s ease; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         .btn-buscar:hover { 
-            background-color: #e6b000; 
+            background-color: #333;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 195, 0, 0.3);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
+        .btn-buscar:active { transform: translateY(0); }
 
-        #resultado { margin-top: 30px; min-height: 100px; padding-bottom: 20px; }
+        #resultado { margin-top: 40px; }
         
         .result-card { 
             background: #ffffff; 
-            padding: 25px; 
-            border: 1px solid #f0f0f0;
-            border-left: 5px solid #FFC300; 
-            border-radius: 10px; 
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02); 
-            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            padding: 24px; 
+            border: 1px solid var(--border-color);
+            border-radius: 18px; 
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease; 
         }
         .result-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
 
+        .instituto-info { flex: 1; }
+
         .instituto-nombre {
-            font-size: 1.3em;
+            font-size: 1.1em;
             font-weight: 700;
-            color: #222;
-            margin-bottom: 15px;
+            color: var(--secondary);
+            margin-bottom: 4px;
         }
 
         .btn-wiki { 
-            display: inline-block; 
-            padding: 10px 20px; 
-            background-color: transparent; 
-            color: #222; 
+            padding: 10px 18px; 
+            background-color: var(--primary); 
+            color: var(--secondary); 
             text-decoration: none; 
-            border: 2px solid #FFC300;
-            border-radius: 6px; 
-            font-weight: 600; 
-            font-size: 0.9em;
-            transition: all 0.3s; 
+            border-radius: 10px; 
+            font-weight: 700; 
+            font-size: 0.85em;
+            transition: all 0.2s; 
+            white-space: nowrap;
         }
         .btn-wiki:hover { 
-            background-color: #FFC300; 
-            color: #000;
+            background-color: var(--primary-dark);
         }
 
-        .status-ok { color: #5F6368; font-size: 0.9em; margin-top: 8px; display: block; font-style: italic; }
-        .sin-wiki { color: #888; font-size: 0.9em; font-style: italic; }
+        .status-text { color: var(--text-light); font-size: 0.85em; font-weight: 500; }
+        .sin-wiki { color: #b2bec3; font-size: 0.85em; font-style: italic; }
 
         .firma-nabil {
-            position: absolute;
-            bottom: 15px;
-            right: 20px;
-            font-size: 0.75em;
-            color: #bbb;
-            font-style: italic;
-            pointer-events: none;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.7em;
+            color: #ccc;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
+
+        /* Animación de entrada para los resultados */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-card { animation: slideUp 0.4s ease forwards; }
+
     </style>
 </head>
 <body>
@@ -140,24 +187,22 @@
 <div class="contenedor">
     <h2>Buscador <strong>UNID</strong></h2>
 
-    <div class="seccion">
-        <label>Estado del Sistema:</label>
-        <span id="statusCarga" class="status-ok">Descargando base de datos en vivo... ⏳</span>
+    <div class="status-box">
+        <span class="status-text" style="color:var(--secondary)">Estado:</span>
+        <span id="statusCarga" class="status-text">Conectando base de datos... ⏳</span>
     </div>
 
-    <div class="seccion">
-        <label>Buscar Documentación</label>
-        <div class="input-group">
-            <input type="text" id="textoBusqueda" placeholder="Escribe el nombre del instituto...">
-            <button class="btn-buscar" onclick="buscarInstituto()">Buscar</button>
-        </div>
+    <div class="input-group">
+        <label>Documentación del Instituto</label>
+        <input type="text" id="textoBusqueda" placeholder="Ej: Instituto Tecnológico...">
+        <button class="btn-buscar" onclick="buscarInstituto()">Realizar Búsqueda</button>
     </div>
 
     <div id="resultado">
-        <p style="color: #aaa; text-align: center;">El sistema se está preparando...</p>
+        <p style="color: #b2bec3; text-align: center; font-size: 0.9em;">Esperando entrada de datos...</p>
     </div>
 
-    <div class="firma-nabil">~Powered By Nabil Q</div>
+    <div class="firma-nabil">Hecho con ❤️ por Nabil Q</div>
 </div>
 
 <script>
@@ -185,11 +230,11 @@
         }
         
         if (procesados > 0) {
-            document.getElementById('statusCarga').innerHTML = "✔️ ¡Listo! " + todosLosDatos.length + " institutos cargados.";
-            document.getElementById('resultado').innerHTML = "<p style='color: #aaa; text-align: center;'>Listo para buscar.</p>";
+            document.getElementById('statusCarga').innerHTML = "🟢 " + todosLosDatos.length + " registros listos";
+            document.getElementById('resultado').innerHTML = "<p style='color: #b2bec3; text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
         } else {
-            document.getElementById('statusCarga').innerHTML = "❌ Error: Base de datos no encontrada.";
-            document.getElementById('statusCarga').style.color = "red";
+            document.getElementById('statusCarga').innerHTML = "🔴 Error de conexión";
+            document.getElementById('statusCarga').style.color = "#d63031";
         }
     };
 
@@ -198,12 +243,12 @@
         const caja = document.getElementById('resultado');
 
         if (todosLosDatos.length === 0) {
-            caja.innerHTML = `<p style="color:#d93025; text-align:center;">Aún estamos conectando la base de datos...</p>`;
+            caja.innerHTML = `<p style="color:#d63031; text-align:center;">Base de datos no disponible.</p>`;
             return;
         }
 
         if (busqueda === "") {
-            caja.innerHTML = `<p style="color:#aaa; text-align:center;">Escribe algo para buscar.</p>`;
+            caja.innerHTML = `<p style="color:#b2bec3; text-align:center;">Por favor, ingresa un nombre.</p>`;
             return;
         }
 
@@ -212,7 +257,7 @@
         );
 
         if (resultados.length > 0) {
-            let htmlTotal = `<p style="color: #666; font-size: 0.85em; margin-bottom: 15px;">Se encontraron ${resultados.length} coincidencia(s):</p>`;
+            let htmlTotal = `<p style="color: var(--text-light); font-size: 0.8em; margin-bottom: 20px; font-weight:600;">MOSTRANDO ${resultados.length} RESULTADO(S)</p>`;
 
             resultados.forEach(encontrado => {
                 let linkWiki = null;
@@ -226,7 +271,9 @@
                 const nombreReal = encontrado.Nombre;
                 let htmlResultado = `
                     <div class="result-card">
-                        <div class="instituto-nombre">${nombreReal}</div>
+                        <div class="instituto-info">
+                            <div class="instituto-nombre">${nombreReal}</div>
+                        </div>
                 `;
 
                 if (linkWiki && linkWiki.toString().trim() !== "") {
@@ -236,11 +283,11 @@
                     }
                     htmlResultado += `
                         <a href="${urlFinal}" target="_blank" class="btn-wiki">
-                            🌐 Abrir Wiki
+                            Abrir Documento ↗
                         </a>
                     `;
                 } else {
-                    htmlResultado += `<span class="sin-wiki">Sin enlace disponible.</span>`;
+                    htmlResultado += `<span class="sin-wiki">Sin link</span>`;
                 }
 
                 htmlResultado += `</div>`;
@@ -250,8 +297,8 @@
             caja.innerHTML = htmlTotal;
         } else {
             caja.innerHTML = `
-                <div style="text-align:center; padding: 20px; background: #fffcf0; border-radius: 8px; color: #8a6d3b;">
-                    No se encontró nada para <strong>"${busqueda}"</strong>.
+                <div style="text-align:center; padding: 30px; background: #fff5f5; border-radius: 18px; color: #c0392b; border: 1px solid #ffeaea;">
+                    No encontramos resultados para <strong>"${busqueda}"</strong>.
                 </div>
             `;
         }
