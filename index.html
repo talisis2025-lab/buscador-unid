@@ -116,7 +116,6 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        .btn-buscar:active { transform: translateY(0); }
 
         #resultado { margin-top: 40px; }
         
@@ -130,6 +129,7 @@
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s ease; 
+            animation: slideUp 0.4s ease forwards;
         }
         .result-card:hover {
             border-color: var(--primary);
@@ -138,13 +138,7 @@
         }
 
         .instituto-info { flex: 1; }
-
-        .instituto-nombre {
-            font-size: 1.1em;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 4px;
-        }
+        .instituto-nombre { font-size: 1.1em; font-weight: 700; color: var(--secondary); margin-bottom: 4px; }
 
         .btn-wiki { 
             padding: 10px 18px; 
@@ -157,29 +151,15 @@
             transition: all 0.2s; 
             white-space: nowrap;
         }
-        .btn-wiki:hover { 
-            background-color: var(--primary-dark);
-        }
+        .btn-wiki:hover { background-color: var(--primary-dark); }
 
         .status-text { color: var(--text-light); font-size: 0.85em; font-weight: 500; }
         .sin-wiki { color: #b2bec3; font-size: 0.85em; font-style: italic; }
 
-        .firma-nabil {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.7em;
-            color: #ccc;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* Animación de entrada para los resultados */
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .result-card { animation: slideUp 0.4s ease forwards; }
-
     </style>
 </head>
 <body>
@@ -201,8 +181,6 @@
     <div id="resultado">
         <p style="color: #b2bec3; text-align: center; font-size: 0.9em;">Esperando entrada de datos...</p>
     </div>
-
-    <div class="firma-nabil">Hecho con ❤️ por Nabil Q</div>
 </div>
 
 <script>
@@ -234,7 +212,6 @@
             document.getElementById('resultado').innerHTML = "<p style='color: #b2bec3; text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
         } else {
             document.getElementById('statusCarga').innerHTML = "🔴 Error de conexión";
-            document.getElementById('statusCarga').style.color = "#d63031";
         }
     };
 
@@ -283,7 +260,7 @@
                     }
                     htmlResultado += `
                         <a href="${urlFinal}" target="_blank" class="btn-wiki">
-                            Abrir Documento ↗
+                            Abrir enlace ↗
                         </a>
                     `;
                 } else {
@@ -296,11 +273,7 @@
 
             caja.innerHTML = htmlTotal;
         } else {
-            caja.innerHTML = `
-                <div style="text-align:center; padding: 30px; background: #fff5f5; border-radius: 18px; color: #c0392b; border: 1px solid #ffeaea;">
-                    No encontramos resultados para <strong>"${busqueda}"</strong>.
-                </div>
-            `;
+            caja.innerHTML = `<div style="text-align:center; padding: 30px; background: #fff5f5; border-radius: 18px; color: #c0392b; border: 1px solid #ffeaea;">No hay resultados para "${busqueda}".</div>`;
         }
     }
 
