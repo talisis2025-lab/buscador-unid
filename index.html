@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscador Interno | UNID</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -16,11 +16,23 @@
             --text-main: #2d3436;
             --text-light: #636e72;
             --border-color: #edf2f7;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.10), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-body); 
+            background:
+                radial-gradient(circle at top left, rgba(255, 195, 0, 0.14), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(26, 26, 26, 0.05), transparent 28%),
+                var(--bg-body);
             color: var(--text-main);
             margin: 0;
             padding: 20px;
@@ -34,19 +46,33 @@
             background: var(--card-bg); 
             padding: 40px; 
             border-radius: 24px; 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
+            box-shadow: var(--shadow);
             width: 100%; 
             max-width: 600px; 
             margin-top: 40px;
             position: relative;
+            border: 1px solid rgba(255,255,255,0.7);
+            animation: fadeInUp 0.6s ease both;
+            overflow: visible;
+        }
+
+        .contenedor::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255,195,0,0.12), transparent 30%, transparent 70%, rgba(26,26,26,0.04));
         }
 
         h2 { 
             text-align: center; 
-            margin: 0 0 40px 0;
+            margin: 0 0 34px 0;
             font-weight: 300; 
             font-size: 2.2em;
             letter-spacing: -1px;
+            position: relative;
+            animation: fadeInDown 0.55s ease both;
         }
         h2 strong {
             color: var(--secondary); 
@@ -58,17 +84,24 @@
             background: #f8fafc;
             padding: 12px 20px;
             border-radius: 12px;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .status-box:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 18px rgba(0,0,0,0.04);
         }
 
         label { 
             display: block; 
             margin-bottom: 10px; 
-            font-weight: 600; 
+            font-weight: 700; 
             color: var(--secondary); 
             font-size: 0.9em;
             text-transform: uppercase;
@@ -82,22 +115,32 @@
             gap: 15px;
         }
 
+        .search-wrap {
+            position: relative;
+        }
+
         input[type="text"] { 
             width: 100%; 
             padding: 16px 20px; 
             border: 2px solid var(--border-color); 
             border-radius: 14px; 
             outline: none; 
-            font-size: 1.1em;
-            transition: all 0.2s ease; 
+            font-size: 1.05em;
+            transition: all 0.22s ease; 
             box-sizing: border-box;
             background: #fafafa;
+            box-shadow: 0 0 0 rgba(255, 195, 0, 0);
         }
         
         input[type="text"]:focus { 
             border-color: var(--primary); 
             background: #fff;
-            box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.1); 
+            box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12); 
+            transform: translateY(-1px);
+        }
+
+        input[type="text"]::placeholder {
+            color: #9aa4aa;
         }
 
         .btn-buscar { 
@@ -107,38 +150,81 @@
             border: none; 
             border-radius: 14px; 
             cursor: pointer; 
-            font-weight: 700; 
+            font-weight: 800; 
             font-size: 1em;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: transform 0.18s ease, box-shadow 0.22s ease, background-color 0.22s ease; 
+            will-change: transform;
         }
         .btn-buscar:hover { 
             background-color: #333;
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10);
+        }
+        .btn-buscar:active {
+            transform: translateY(0) scale(0.99);
         }
 
-        #resultado { margin-top: 40px; }
+        #resultado { 
+            margin-top: 36px;
+            display: grid;
+            gap: 14px;
+        }
         
         .result-card { 
             background: #ffffff; 
             padding: 24px; 
             border: 1px solid var(--border-color);
             border-radius: 18px; 
-            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease; 
-            animation: slideUp 0.4s ease forwards;
-        }
-        .result-card:hover {
-            border-color: var(--primary);
-            transform: scale(1.02);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            gap: 14px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; 
+            animation: slideUp 0.42s ease forwards;
+            opacity: 0;
         }
 
-        .instituto-info { flex: 1; }
-        .instituto-nombre { font-size: 1.1em; font-weight: 700; color: var(--secondary); margin-bottom: 4px; }
+        .result-card.show {
+            opacity: 1;
+        }
+
+        .result-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+        }
+
+        .instituto-info { 
+            flex: 1;
+            min-width: 0;
+        }
+
+        .instituto-nombre { 
+            font-size: 1.08em; 
+            font-weight: 800; 
+            color: var(--secondary); 
+            margin-bottom: 6px;
+            line-height: 1.25;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.78em;
+            font-weight: 700;
+            background: #f3f5f7;
+            color: #586069;
+        }
 
         .btn-wiki { 
             padding: 10px 18px; 
@@ -146,19 +232,189 @@
             color: var(--secondary); 
             text-decoration: none; 
             border-radius: 10px; 
-            font-weight: 700; 
+            font-weight: 800; 
             font-size: 0.85em;
-            transition: all 0.2s; 
+            transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease; 
             white-space: nowrap;
+            box-shadow: 0 8px 16px rgba(255, 195, 0, 0.20);
         }
-        .btn-wiki:hover { background-color: var(--primary-dark); }
+        .btn-wiki:hover { 
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 18px rgba(255, 195, 0, 0.26);
+        }
+        .btn-wiki:active {
+            transform: translateY(0) scale(0.99);
+        }
 
-        .status-text { color: var(--text-light); font-size: 0.85em; font-weight: 500; }
+        .status-text { color: var(--text-light); font-size: 0.85em; font-weight: 600; }
         .sin-wiki { color: #b2bec3; font-size: 0.85em; font-style: italic; }
 
+        .search-hint {
+            font-size: 0.82em;
+            color: #7f8c8d;
+            margin-top: -6px;
+            animation: fadeIn 0.35s ease both;
+        }
+
+        .sugerencias {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 18px 34px rgba(0,0,0,0.12);
+            overflow: hidden;
+            max-height: 280px;
+            overflow-y: auto;
+            transform-origin: top;
+            animation: popIn 0.16s ease both;
+        }
+
+        .sugerencia-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            color: var(--text-main);
+            transition: background-color 0.15s ease, transform 0.15s ease;
+        }
+
+        .sugerencia-item:hover {
+            background: #f8fafc;
+            transform: translateX(2px);
+        }
+
+        .sugerencia-item:last-child {
+            border-bottom: none;
+        }
+
+        .sugerencia-main {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .sugerencia-sub {
+            display: block;
+            margin-top: 4px;
+            font-size: 0.78em;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .resultado-vacio {
+            text-align:center;
+            padding: 30px;
+            background: linear-gradient(180deg, #fff7f7, #fff);
+            border-radius: 18px;
+            color: #c0392b;
+            border: 1px solid #ffeaea;
+            animation: fadeIn 0.35s ease both;
+        }
+
+        .loading-dots::after {
+            content: "";
+            display: inline-block;
+            width: 1.4em;
+            text-align: left;
+            animation: dots 1.2s steps(4, end) infinite;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(0,0,0,0.12);
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.98) translateY(-4px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes dots {
+            0% { content: ""; }
+            25% { content: "."; }
+            50% { content: ".."; }
+            75% { content: "..."; }
+            100% { content: ""; }
+        }
+
+        .pulse {
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.65; }
+        }
+
+        .results-count {
+            margin: 0 0 10px 0;
+            color: var(--text-light);
+            font-size: 0.82em;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 14px;
+            }
+
+            .contenedor {
+                padding: 26px 18px;
+                margin-top: 16px;
+                border-radius: 20px;
+            }
+
+            h2 {
+                font-size: 1.8em;
+                margin-bottom: 24px;
+            }
+
+            .result-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-wiki {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -169,13 +425,17 @@
 
     <div class="status-box">
         <span class="status-text" style="color:var(--secondary)">Estado:</span>
-        <span id="statusCarga" class="status-text">Conectando base de datos... ⏳</span>
+        <span id="statusCarga" class="status-text"><span class="spinner"></span> Conectando base de datos...</span>
     </div>
 
     <div class="input-group">
         <label>Documentación del Instituto</label>
-        <input type="text" id="textoBusqueda" placeholder="Ej: Instituto Tecnológico...">
-        <button class="btn-buscar" onclick="buscarInstituto()">Realizar Búsqueda</button>
+        <div class="search-wrap">
+            <input type="text" id="textoBusqueda" placeholder="Ej: Instituto Tecnológico..." autocomplete="off">
+            <div id="sugerencias" class="sugerencias"></div>
+        </div>
+        <div class="search-hint">Escribe para ver sugerencias en vivo o presiona Enter para buscar.</div>
+        <button class="btn-buscar" id="btnBuscar" onclick="buscarInstituto()">Realizar Búsqueda</button>
     </div>
 
     <div id="resultado">
@@ -185,10 +445,118 @@
 
 <script>
     let todosLosDatos = [];
-    const archivosA_Cargar = ['database.xlsx']; 
+    const archivosA_Cargar = ['database.xlsx'];
+
+    let sugerenciasActuales = [];
+    let debounceTimer = null;
+    let buscandoAutomaticamente = false;
+
+    function normalizarTexto(texto) {
+        return (texto ?? "")
+            .toString()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
+
+    function escapeHtml(texto) {
+        return (texto ?? "")
+            .toString()
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll("\"", "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    function obtenerLinkWiki(encontrado) {
+        let linkWiki = null;
+        Object.keys(encontrado).forEach(columna => {
+            let nomCol = columna.toLowerCase().trim();
+            if (nomCol.includes("wiki") || nomCol.includes("link") || nomCol.includes("url")) {
+                linkWiki = encontrado[columna];
+            }
+        });
+        return linkWiki;
+    }
+
+    function renderSugerencias(lista) {
+        const caja = document.getElementById("sugerencias");
+
+        if (!lista.length) {
+            caja.innerHTML = "";
+            caja.style.display = "none";
+            return;
+        }
+
+        caja.innerHTML = lista.map((item, index) => {
+            const nombre = escapeHtml(item.Nombre || "Sin nombre");
+            const tipo = escapeHtml(item.Tipo || "Instituto");
+            const extra = item.Zona ? ` • Zona ${escapeHtml(item.Zona)}` : "";
+            return `
+                <div class="sugerencia-item" data-index="${index}">
+                    <div class="sugerencia-main">
+                        <span>${nombre}</span>
+                        <i class="fas fa-arrow-right" style="font-size:0.75em; opacity:0.45;"></i>
+                    </div>
+                    <span class="sugerencia-sub">${tipo}${extra}</span>
+                </div>
+            `;
+        }).join("");
+
+        caja.style.display = "block";
+    }
+
+    function actualizarSugerenciasYBusqueda() {
+        const texto = document.getElementById('textoBusqueda').value;
+        const busqueda = normalizarTexto(texto);
+
+        if (debounceTimer) clearTimeout(debounceTimer);
+
+        if (!busqueda) {
+            sugerenciasActuales = [];
+            renderSugerencias([]);
+            if (!buscandoAutomaticamente) {
+                document.getElementById('resultado').innerHTML = "<p style='color: #b2bec3; text-align: center; font-size: 0.9em;'>Escribe para buscar institutos.</p>";
+            }
+            return;
+        }
+
+        sugerenciasActuales = todosLosDatos
+            .filter(fila => fila.Nombre && normalizarTexto(fila.Nombre).includes(busqueda))
+            .sort((a, b) => {
+                const na = normalizarTexto(a.Nombre);
+                const nb = normalizarTexto(b.Nombre);
+                const aStart = na.startsWith(busqueda) ? 0 : 1;
+                const bStart = nb.startsWith(busqueda) ? 0 : 1;
+                if (aStart !== bStart) return aStart - bStart;
+                return na.localeCompare(nb, 'es');
+            })
+            .slice(0, 6);
+
+        renderSugerencias(sugerenciasActuales);
+
+        debounceTimer = setTimeout(() => {
+            buscandoAutomaticamente = true;
+            buscarInstituto(true);
+            buscandoAutomaticamente = false;
+        }, 220);
+    }
+
+    function seleccionarSugerencia(index) {
+        const item = sugerenciasActuales[index];
+        if (!item) return;
+        document.getElementById('textoBusqueda').value = item.Nombre || "";
+        document.getElementById('sugerencias').style.display = "none";
+        buscarInstituto();
+    }
 
     window.onload = async function() {
         let procesados = 0;
+        const status = document.getElementById('statusCarga');
+        status.innerHTML = "<span class='spinner'></span> Cargando base de datos...";
+
         for (const nombreArchivo of archivosA_Cargar) {
             try {
                 const response = await fetch(nombreArchivo);
@@ -212,12 +580,15 @@
             document.getElementById('resultado').innerHTML = "<p style='color: #b2bec3; text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
         } else {
             document.getElementById('statusCarga').innerHTML = "🔴 Error de conexión";
+            document.getElementById('resultado').innerHTML = "<div class='resultado-vacio'>No fue posible cargar la base de datos.</div>";
         }
     };
 
-    function buscarInstituto() {
-        const busqueda = document.getElementById('textoBusqueda').value.toLowerCase().trim();
+    function buscarInstituto(desdeInput = false) {
+        const busquedaOriginal = document.getElementById('textoBusqueda').value.trim();
+        const busqueda = normalizarTexto(busquedaOriginal);
         const caja = document.getElementById('resultado');
+        document.getElementById('sugerencias').style.display = "none";
 
         if (todosLosDatos.length === 0) {
             caja.innerHTML = `<p style="color:#d63031; text-align:center;">Base de datos no disponible.</p>`;
@@ -230,26 +601,29 @@
         }
 
         const resultados = todosLosDatos.filter(fila => 
-            fila.Nombre && fila.Nombre.toString().toLowerCase().includes(busqueda)
+            fila.Nombre && normalizarTexto(fila.Nombre).includes(busqueda)
         );
 
         if (resultados.length > 0) {
-            let htmlTotal = `<p style="color: var(--text-light); font-size: 0.8em; margin-bottom: 20px; font-weight:600;">MOSTRANDO ${resultados.length} RESULTADO(S)</p>`;
+            let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} RESULTADO(S)</p>`;
 
-            resultados.forEach(encontrado => {
-                let linkWiki = null;
-                Object.keys(encontrado).forEach(columna => {
-                    let nomCol = columna.toLowerCase().trim();
-                    if (nomCol.includes("wiki") || nomCol.includes("link") || nomCol.includes("url")) {
-                        linkWiki = encontrado[columna];
-                    }
-                });
-
+            resultados.forEach((encontrado, idx) => {
+                let linkWiki = obtenerLinkWiki(encontrado);
                 const nombreReal = encontrado.Nombre;
+                const tipo = encontrado.Tipo || "Instituto";
+                const zona = encontrado.Zona ? `Zona ${encontrado.Zona}` : "";
+                const nombreHtml = escapeHtml(nombreReal);
+                const tipoHtml = escapeHtml(tipo);
+                const zonaHtml = escapeHtml(zona);
+
                 let htmlResultado = `
-                    <div class="result-card">
+                    <div class="result-card" style="animation-delay:${Math.min(idx * 0.05, 0.22)}s;">
                         <div class="instituto-info">
-                            <div class="instituto-nombre">${nombreReal}</div>
+                            <div class="instituto-nombre">${nombreHtml}</div>
+                            <div class="meta-row">
+                                <span class="pill"><i class="fas fa-tag"></i> ${tipoHtml}</span>
+                                ${zona ? `<span class="pill"><i class="fas fa-map-marker-alt"></i> ${zonaHtml}</span>` : ""}
+                            </div>
                         </div>
                 `;
 
@@ -259,7 +633,7 @@
                         urlFinal = 'https://' + urlFinal;
                     }
                     htmlResultado += `
-                        <a href="${urlFinal}" target="_blank" class="btn-wiki">
+                        <a href="${escapeHtml(urlFinal)}" target="_blank" class="btn-wiki">
                             Abrir Wiki ↗
                         </a>
                     `;
@@ -272,13 +646,45 @@
             });
 
             caja.innerHTML = htmlTotal;
+
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.result-card').forEach(card => card.classList.add('show'));
+            });
         } else {
-            caja.innerHTML = `<div style="text-align:center; padding: 30px; background: #fff5f5; border-radius: 18px; color: #c0392b; border: 1px solid #ffeaea;">No hay resultados para "${busqueda}".</div>`;
+            caja.innerHTML = `<div class="resultado-vacio">No hay resultados para "${escapeHtml(busquedaOriginal)}".</div>`;
         }
     }
 
-    document.getElementById('textoBusqueda').addEventListener('keypress', (e) => { 
-        if (e.key === 'Enter') buscarInstituto(); 
+    document.getElementById('textoBusqueda').addEventListener('input', actualizarSugerenciasYBusqueda);
+
+    document.getElementById('textoBusqueda').addEventListener('keydown', (e) => { 
+        if (e.key === 'Enter') {
+            buscarInstituto();
+        } else if (e.key === 'Escape') {
+            document.getElementById('sugerencias').style.display = "none";
+        }
+    });
+
+    document.getElementById('btnBuscar').addEventListener('mousedown', function() {
+        this.style.transform = 'translateY(0) scale(0.99)';
+    });
+
+    document.getElementById('btnBuscar').addEventListener('mouseup', function() {
+        this.style.transform = '';
+    });
+
+    document.getElementById('sugerencias').addEventListener('click', function(e) {
+        const item = e.target.closest('.sugerencia-item');
+        if (!item) return;
+        seleccionarSugerencia(parseInt(item.dataset.index, 10));
+    });
+
+    document.addEventListener('click', function(e) {
+        const wrap = document.querySelector('.search-wrap');
+        const sugerencias = document.getElementById('sugerencias');
+        if (!wrap.contains(e.target)) {
+            sugerencias.style.display = 'none';
+        }
     });
 </script>
 
