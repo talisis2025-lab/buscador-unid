@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mantenimiento - UNID</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Inter',sans-serif;
+    background:
+    radial-gradient(circle at 20% 20%, rgba(255,195,0,.15), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(0,0,0,.04), transparent 40%),
+    #f4f7f9;
+}
+
+.card{
+    background:white;
+    padding:50px 45px;
+    border-radius:26px;
+    text-align:center;
+    max-width:420px;
+    box-shadow:0 30px 60px rgba(0,0,0,.12);
+    animation:fadeUp .6s ease;
+}
+
+.icon{
+    font-size:58px;
+    margin-bottom:20px;
+    animation:spin 3s linear infinite;
+}
+
+h1{
+    margin:0;
+    font-weight:800;
+    letter-spacing:-1px;
+    color:#1a1a1a;
+}
+
+.line{
+    width:70px;
+    height:5px;
+    background:#FFC300;
+    border-radius:20px;
+    margin:18px auto 22px;
+}
+
+p{
+    color:#636e72;
+    font-weight:500;
+    line-height:1.6;
+}
+
+strong{
+    color:#1a1a1a;
+}
+
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(20px)}
+    to{opacity:1; transform:translateY(0)}
+}
+
+@keyframes spin{
+    from{transform:rotate(0)}
+    to{transform:rotate(360deg)}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="icon">🎓</div>
+
+    <h1>Estamos Actualizando</h1>
+
+    <div class="line"></div>
+
+    <p>
+        Estamos mejorando el <strong>buscador institucional UNID</strong> para brindarte una mejor experiencia.
+        <br><br>
+        Volveremos en unos momentos.
+    </p>
+
+</div>
+
+</body>
+</html>
