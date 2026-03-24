@@ -17,6 +17,21 @@
             --text-light: #636e72;
             --border-color: #edf2f7;
             --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.10), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --input-bg: #fafafa;
+            --status-bg: #f8fafc;
+        }
+
+        /* Variables Modo Noche */
+        body.dark-mode {
+            --secondary: #f8f9fa;
+            --bg-body: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e2e8f0;
+            --text-light: #a0aec0;
+            --border-color: #333333;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            --input-bg: #2d3748;
+            --status-bg: #2d3748;
         }
 
         * {
@@ -40,6 +55,7 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .contenedor { 
@@ -51,18 +67,35 @@
             max-width: 600px; 
             margin-top: 40px;
             position: relative;
-            border: 1px solid rgba(255,255,255,0.7);
+            border: 1px solid var(--border-color);
             animation: fadeInUp 0.6s ease both;
             overflow: visible;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        .contenedor::before {
-            content: "";
+        .btn-dark-mode {
             position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            pointer-events: none;
-            background: linear-gradient(135deg, rgba(255,195,0,0.12), transparent 30%, transparent 70%, rgba(26,26,26,0.04));
+            top: 25px;
+            right: 25px;
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            color: var(--text-main);
+            z-index: 10;
+        }
+
+        .btn-dark-mode:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
         }
 
         h2 { 
@@ -81,7 +114,7 @@
         }
 
         .status-box {
-            background: #f8fafc;
+            background: var(--status-bg);
             padding: 12px 20px;
             border-radius: 12px;
             margin-bottom: 24px;
@@ -90,7 +123,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
         }
 
         .status-box:hover {
@@ -128,25 +161,26 @@
             font-size: 1.05em;
             transition: all 0.22s ease; 
             box-sizing: border-box;
-            background: #fafafa;
+            background: var(--input-bg);
+            color: var(--text-main);
             box-shadow: 0 0 0 rgba(255, 195, 0, 0);
         }
         
         input[type="text"]:focus { 
             border-color: var(--primary); 
-            background: #fff;
+            background: var(--card-bg);
             box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12); 
             transform: translateY(-1px);
         }
 
         input[type="text"]::placeholder {
-            color: #9aa4aa;
+            color: var(--text-light);
         }
 
         .btn-buscar { 
             padding: 16px; 
             background-color: var(--secondary); 
-            color: white; 
+            color: var(--card-bg); 
             border: none; 
             border-radius: 14px; 
             cursor: pointer; 
@@ -155,11 +189,22 @@
             transition: transform 0.18s ease, box-shadow 0.22s ease, background-color 0.22s ease; 
             will-change: transform;
         }
+        
+        body.dark-mode .btn-buscar {
+            background-color: var(--primary);
+            color: #121212;
+        }
+
         .btn-buscar:hover { 
             background-color: #333;
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10);
         }
+
+        body.dark-mode .btn-buscar:hover {
+            background-color: var(--primary-dark);
+        }
+
         .btn-buscar:active {
             transform: translateY(0) scale(0.99);
         }
@@ -171,7 +216,7 @@
         }
         
         .result-card { 
-            background: #ffffff; 
+            background: var(--card-bg); 
             padding: 24px; 
             border: 1px solid var(--border-color);
             border-radius: 18px; 
@@ -222,14 +267,14 @@
             border-radius: 999px;
             font-size: 0.78em;
             font-weight: 700;
-            background: #f3f5f7;
-            color: #586069;
+            background: var(--status-bg);
+            color: var(--text-light);
         }
 
         .btn-wiki { 
             padding: 10px 18px; 
             background-color: var(--primary); 
-            color: var(--secondary); 
+            color: #1a1a1a; 
             text-decoration: none; 
             border-radius: 10px; 
             font-weight: 800; 
@@ -248,11 +293,11 @@
         }
 
         .status-text { color: var(--text-light); font-size: 0.85em; font-weight: 600; }
-        .sin-wiki { color: #b2bec3; font-size: 0.85em; font-style: italic; }
+        .sin-wiki { color: var(--text-light); font-size: 0.85em; font-style: italic; }
 
         .search-hint {
             font-size: 0.82em;
-            color: #7f8c8d;
+            color: var(--text-light);
             margin-top: -6px;
             animation: fadeIn 0.35s ease both;
         }
@@ -285,7 +330,7 @@
         }
 
         .sugerencia-item:hover {
-            background: #f8fafc;
+            background: var(--status-bg);
             transform: translateX(2px);
         }
 
@@ -311,19 +356,11 @@
         .resultado-vacio {
             text-align:center;
             padding: 30px;
-            background: linear-gradient(180deg, #fff7f7, #fff);
+            background: var(--status-bg);
             border-radius: 18px;
-            color: #c0392b;
-            border: 1px solid #ffeaea;
+            color: #e74c3c;
+            border: 1px solid var(--border-color);
             animation: fadeIn 0.35s ease both;
-        }
-
-        .loading-dots::after {
-            content: "";
-            display: inline-block;
-            width: 1.4em;
-            text-align: left;
-            animation: dots 1.2s steps(4, end) infinite;
         }
 
         .spinner {
@@ -334,6 +371,11 @@
             border-top-color: var(--secondary);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
+        }
+        
+        body.dark-mode .spinner {
+            border: 2px solid rgba(255,255,255,0.12);
+            border-top-color: var(--primary);
         }
 
         @keyframes spin {
@@ -365,23 +407,6 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        @keyframes dots {
-            0% { content: ""; }
-            25% { content: "."; }
-            50% { content: ".."; }
-            75% { content: "..."; }
-            100% { content: ""; }
-        }
-
-        .pulse {
-            animation: pulse 1.6s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.65; }
-        }
-
         .results-count {
             margin: 0 0 10px 0;
             color: var(--text-light);
@@ -391,26 +416,24 @@
         }
 
         @media (max-width: 640px) {
-            body {
-                padding: 14px;
-            }
-
+            body { padding: 14px; }
             .contenedor {
                 padding: 26px 18px;
                 margin-top: 16px;
                 border-radius: 20px;
             }
-
+            .btn-dark-mode {
+                top: 15px;
+                right: 15px;
+            }
             h2 {
                 font-size: 1.8em;
                 margin-bottom: 24px;
             }
-
             .result-card {
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .btn-wiki {
                 width: 100%;
                 text-align: center;
@@ -421,6 +444,7 @@
 <body>
 
 <div class="contenedor">
+    <button id="btnDarkMode" class="btn-dark-mode" title="Alternar modo oscuro">🌙</button>
     <h2>Buscador <strong>UNID</strong></h2>
 
     <div class="status-box">
@@ -439,11 +463,29 @@
     </div>
 
     <div id="resultado">
-        <p style="color: #b2bec3; text-align: center; font-size: 0.9em;">Esperando entrada de datos...</p>
+        <p style="color: var(--text-light); text-align: center; font-size: 0.9em;">Esperando entrada de datos...</p>
     </div>
 </div>
 
 <script>
+    // Gestión del Modo Noche
+    const btnDarkMode = document.getElementById('btnDarkMode');
+    const toggleDarkMode = () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        btnDarkMode.innerText = isDark ? '☀️' : '🌙';
+    };
+
+    if(localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        btnDarkMode.innerText = '☀️';
+    }
+
+    btnDarkMode.addEventListener('click', toggleDarkMode);
+
+
+    // Lógica del Buscador Original
     let todosLosDatos = [];
     const archivosA_Cargar = ['database.xlsx'];
 
@@ -518,7 +560,7 @@
             sugerenciasActuales = [];
             renderSugerencias([]);
             if (!buscandoAutomaticamente) {
-                document.getElementById('resultado').innerHTML = "<p style='color: #b2bec3; text-align: center; font-size: 0.9em;'>Escribe para buscar institutos.</p>";
+                document.getElementById('resultado').innerHTML = "<p style='color: var(--text-light); text-align: center; font-size: 0.9em;'>Escribe para buscar institutos.</p>";
             }
             return;
         }
@@ -577,7 +619,7 @@
         
         if (procesados > 0) {
             document.getElementById('statusCarga').innerHTML = "🟢 " + todosLosDatos.length + " registros listos";
-            document.getElementById('resultado').innerHTML = "<p style='color: #b2bec3; text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
+            document.getElementById('resultado').innerHTML = "<p style='color: var(--text-light); text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
         } else {
             document.getElementById('statusCarga').innerHTML = "🔴 Error de conexión";
             document.getElementById('resultado').innerHTML = "<div class='resultado-vacio'>No fue posible cargar la base de datos.</div>";
@@ -596,7 +638,7 @@
         }
 
         if (busqueda === "") {
-            caja.innerHTML = `<p style="color:#b2bec3; text-align:center;">Por favor, ingresa un nombre.</p>`;
+            caja.innerHTML = `<p style="color:var(--text-light); text-align:center;">Por favor, ingresa un nombre.</p>`;
             return;
         }
 
@@ -634,7 +676,7 @@
                     }
                     htmlResultado += `
                         <a href="${escapeHtml(urlFinal)}" target="_blank" class="btn-wiki">
-                            Abrir Wiki ↗
+                            abrir wiki ↗
                         </a>
                     `;
                 } else {
