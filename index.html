@@ -20,7 +20,6 @@
             --input-bg: #fafafa;
             --status-bg: #f8fafc;
         }
-        /* Variables Modo Noche */
         body.dark-mode {
             --secondary: #f8f9fa;
             --bg-body: #121212;
@@ -32,384 +31,73 @@
             --input-bg: #2d3748;
             --status-bg: #2d3748;
         }
-        * {
-            box-sizing: border-box;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(255, 195, 0, 0.14), transparent 35%),
-                radial-gradient(circle at bottom right, rgba(26, 26, 26, 0.05), transparent 28%),
-                var(--bg-body);
+            background: radial-gradient(circle at top left, rgba(255, 195, 0, 0.14), transparent 35%),
+                        radial-gradient(circle at bottom right, rgba(26, 26, 26, 0.05), transparent 28%),
+                        var(--bg-body);
             color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         .contenedor {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 600px;
-            margin-top: 40px;
-            position: relative;
-            border: 1px solid var(--border-color);
+            background: var(--card-bg); padding: 40px; border-radius: 24px;
+            box-shadow: var(--shadow); width: 100%; max-width: 600px; margin-top: 40px;
+            position: relative; border: 1px solid var(--border-color);
             animation: fadeInUp 0.6s ease both;
-            overflow: visible;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
-        .btn-dark-mode {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            background: var(--bg-body);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            color: var(--text-main);
-            z-index: 10;
-        }
-        .btn-dark-mode:hover {
-            transform: scale(1.05);
-            border-color: var(--primary);
-        }
-        h2 {
-            text-align: center;
-            margin: 0 0 34px 0;
-            font-weight: 300;
-            font-size: 2.2em;
-            letter-spacing: -1px;
-            position: relative;
-            animation: fadeInDown 0.55s ease both;
-        }
-        h2 strong {
-            color: var(--secondary);
-            font-weight: 800;
-            border-bottom: 4px solid var(--primary);
-        }
-        .status-box {
-            background: var(--status-bg);
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
-        }
-        .status-box:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 18px rgba(0,0,0,0.04);
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 700;
-            color: var(--secondary);
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .input-group {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .search-wrap {
-            position: relative;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid var(--border-color);
-            border-radius: 14px;
-            outline: none;
-            font-size: 1.05em;
-            transition: all 0.22s ease;
-            box-sizing: border-box;
-            background: var(--input-bg);
-            color: var(--text-main);
-            box-shadow: 0 0 0 rgba(255, 195, 0, 0);
-        }
-       
-        input[type="text"]:focus {
-            border-color: var(--primary);
-            background: var(--card-bg);
-            box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12);
-            transform: translateY(-1px);
-        }
-        input[type="text"]::placeholder {
-            color: var(--text-light);
-        }
-        .btn-buscar {
-            padding: 16px;
-            background-color: var(--secondary);
-            color: var(--card-bg);
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            font-weight: 800;
-            font-size: 1em;
-            transition: transform 0.18s ease, box-shadow 0.22s ease, background-color 0.22s ease;
-            will-change: transform;
-        }
-       
-        body.dark-mode .btn-buscar {
-            background-color: var(--primary);
-            color: #121212;
-        }
-        .btn-buscar:hover {
-            background-color: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10);
-        }
-        body.dark-mode .btn-buscar:hover {
-            background-color: var(--primary-dark);
-        }
-        .btn-buscar:active {
-            transform: translateY(0) scale(0.99);
-        }
-        #resultado {
-            margin-top: 36px;
-            display: grid;
-            gap: 14px;
-        }
-       
+        .btn-dark-mode { position: absolute; top: 25px; right: 25px; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 50%; width: 40px; height: 40px; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); color: var(--text-main); z-index: 10; }
+        .btn-dark-mode:hover { transform: scale(1.05); border-color: var(--primary); }
+        h2 { text-align: center; margin: 0 0 34px 0; font-weight: 300; font-size: 2.2em; letter-spacing: -1px; animation: fadeInDown 0.55s ease both; }
+        h2 strong { color: var(--secondary); font-weight: 800; border-bottom: 4px solid var(--primary); }
+        .status-box { background: var(--status-bg); padding: 12px 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        label { display: block; margin-bottom: 10px; font-weight: 700; color: var(--secondary); font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group { position: relative; display: flex; flex-direction: column; gap: 15px; }
+        input[type="text"] { width: 100%; padding: 16px 20px; border: 2px solid var(--border-color); border-radius: 14px; outline: none; font-size: 1.05em; background: var(--input-bg); color: var(--text-main); transition: all 0.22s ease; }
+        input[type="text"]:focus { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12); transform: translateY(-1px); }
+        .btn-buscar { padding: 16px; background-color: var(--secondary); color: var(--card-bg); border: none; border-radius: 14px; cursor: pointer; font-weight: 800; font-size: 1em; transition: transform 0.18s ease, box-shadow 0.22s ease, background-color 0.22s ease; }
+        body.dark-mode .btn-buscar { background-color: var(--primary); color: #121212; }
+        #resultado { margin-top: 36px; display: grid; gap: 14px; }
         .result-card {
-            background: var(--card-bg);
-            padding: 24px;
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 14px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            animation: slideUp 0.42s ease forwards;
-            opacity: 0;
+            background: var(--card-bg); padding: 24px; border: 1px solid var(--border-color);
+            border-radius: 18px; display: flex; justify-content: space-between; align-items: center;
+            gap: 14px; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            animation: slideUp 0.42s ease forwards; opacity: 0;
         }
-        .result-card.show {
-            opacity: 1;
-        }
-        .result-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-        }
-        .instituto-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .instituto-nombre {
-            font-size: 1.08em;
-            font-weight: 800;
-            color: var(--secondary);
-            margin-bottom: 6px;
-            line-height: 1.25;
-        }
-        .meta-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 6px;
-        }
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 0.78em;
-            font-weight: 700;
-            background: var(--status-bg);
-            color: var(--text-light);
-        }
+        .result-card.show { opacity: 1; }
+        .result-card:hover { border-color: var(--primary); transform: translateY(-3px) scale(1.01); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
+        .instituto-info { flex: 1; min-width: 0; }
+        .instituto-nombre { font-size: 1.08em; font-weight: 800; color: var(--secondary); margin-bottom: 6px; line-height: 1.25; }
+        .meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+        .pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 0.78em; font-weight: 700; background: var(--status-bg); color: var(--text-light); }
         .btn-wiki {
-            padding: 10px 18px;
-            background-color: var(--primary);
-            color: #1a1a1a;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 0.85em;
-            transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
-            white-space: nowrap;
-            box-shadow: 0 8px 16px rgba(255, 195, 0, 0.20);
+            padding: 10px 18px; background-color: var(--primary); color: #1a1a1a;
+            text-decoration: none; border-radius: 10px; font-weight: 800; font-size: 0.85em;
+            transition: all 0.18s ease; white-space: nowrap; box-shadow: 0 8px 16px rgba(255, 195, 0, 0.20);
         }
-        .btn-wiki:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 18px rgba(255, 195, 0, 0.26);
-        }
-        .btn-wiki:active {
-            transform: translateY(0) scale(0.99);
-        }
-        .status-text { color: var(--text-light); font-size: 0.85em; font-weight: 600; }
+        .btn-wiki:hover { background-color: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 10px 18px rgba(255, 195, 0, 0.26); }
         .sin-wiki { color: var(--text-light); font-size: 0.85em; font-style: italic; }
-        .search-hint {
-            font-size: 0.82em;
-            color: var(--text-light);
-            margin-top: -6px;
-            animation: fadeIn 0.35s ease both;
-        }
-        .resultado-vacio {
-            text-align:center;
-            padding: 30px;
-            background: var(--status-bg);
-            border-radius: 18px;
-            color: #e74c3c;
-            border: 1px solid var(--border-color);
-            animation: fadeIn 0.35s ease both;
-        }
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(0,0,0,0.12);
-            border-top-color: var(--secondary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-       
-        body.dark-mode .spinner {
-            border: 2px solid rgba(255,255,255,0.12);
-            border-top-color: var(--primary);
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(18px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.98) translateY(-4px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .results-count {
-            margin: 0 0 10px 0;
-            color: var(--text-light);
-            font-size: 0.82em;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-        /* BOTÓN DE AYUDA */
-        .help-container {
-            position: fixed;
-            right: 24px;
-            bottom: 24px;
-            z-index: 9999;
-        }
-        .help-btn {
-            width: 54px;
-            height: 54px;
-            border: none;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #1a1a1a;
-            font-size: 1.4em;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.18);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .help-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 18px 32px rgba(0,0,0,0.22);
-            background: var(--primary-dark);
-        }
-        .help-box {
-            position: absolute;
-            bottom: 68px;
-            right: 0;
-            width: 250px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            padding: 16px 18px;
-            color: var(--text-main);
-            display: none;
-            animation: fadeInUp 0.25s ease both;
-            font-size: 0.88em;
-            line-height: 1.45;
-        }
-        .help-box strong {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--secondary);
-            font-size: 1em;
-        }
-        .help-mail {
-            font-weight: 800;
-            color: var(--secondary);
-            word-break: break-word;
-        }
+        .search-hint { font-size: 0.82em; color: var(--text-light); margin-top: -6px; animation: fadeIn 0.35s ease both; }
+        .resultado-vacio { text-align:center; padding: 30px; background: var(--status-bg); border-radius: 18px; color: #e74c3c; border: 1px solid var(--border-color); animation: fadeIn 0.35s ease both; }
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(0,0,0,0.12); border-top-color: var(--secondary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        body.dark-mode .spinner { border: 2px solid rgba(255,255,255,0.12); border-top-color: var(--primary); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .results-count { margin: 0 0 10px 0; color: var(--text-light); font-size: 0.82em; font-weight: 700; letter-spacing: 0.3px; }
+        .help-container { position: fixed; right: 24px; bottom: 24px; z-index: 9999; }
+        .help-btn { width: 54px; height: 54px; border: none; border-radius: 50%; background: var(--primary); color: #1a1a1a; font-size: 1.4em; font-weight: 800; cursor: pointer; box-shadow: 0 14px 28px rgba(0,0,0,0.18); }
+        .help-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 18px 32px rgba(0,0,0,0.22); background: var(--primary-dark); }
+        .help-box { position: absolute; bottom: 68px; right: 0; width: 250px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--shadow); padding: 16px 18px; color: var(--text-main); display: none; animation: fadeInUp 0.25s ease both; font-size: 0.88em; line-height: 1.45; }
         @media (max-width: 640px) {
-            body { padding: 14px; }
-            .contenedor {
-                padding: 26px 18px;
-                margin-top: 16px;
-                border-radius: 20px;
-            }
-            .btn-dark-mode {
-                top: 15px;
-                right: 15px;
-            }
-            h2 {
-                font-size: 1.8em;
-                margin-bottom: 24px;
-            }
-            .result-card {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .btn-wiki {
-                width: 100%;
-                text-align: center;
-            }
-            .help-container {
-                right: 16px;
-                bottom: 16px;
-            }
-            .help-box {
-                width: min(250px, calc(100vw - 32px));
-            }
+            .contenedor { padding: 26px 18px; margin-top: 16px; border-radius: 20px; }
+            .result-card { flex-direction: column; align-items: stretch; }
+            .btn-wiki { width: 100%; text-align: center; }
         }
     </style>
 </head>
@@ -433,6 +121,7 @@
         <p style="color: var(--text-light); text-align: center; font-size: 0.9em;">Esperando entrada de datos...</p>
     </div>
 </div>
+
 <!-- BOTÓN DE AYUDA -->
 <div class="help-container">
     <div id="helpBox" class="help-box">
@@ -442,8 +131,9 @@
     </div>
     <button id="helpBtn" class="help-btn" title="Ayuda">?</button>
 </div>
+
 <script>
-    // Gestión del Modo Noche
+    // Modo Noche
     const btnDarkMode = document.getElementById('btnDarkMode');
     const toggleDarkMode = () => {
         document.body.classList.toggle('dark-mode');
@@ -457,35 +147,21 @@
     }
     btnDarkMode.addEventListener('click', toggleDarkMode);
 
-    // Lógica del Buscador
     let todosLosDatos = [];
     const archivosA_Cargar = ['database.xlsx'];
     let debounceTimer = null;
 
     function normalizarTexto(texto) {
-        return (texto ?? "")
-            .toString()
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim();
+        return (texto ?? "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
     }
     function escapeHtml(texto) {
-        return (texto ?? "")
-            .toString()
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll("\"", "&quot;")
-            .replaceAll("'", "&#39;");
+        return (texto ?? "").toString().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&#39;");
     }
     function obtenerLinkWiki(encontrado) {
         let linkWiki = null;
         Object.keys(encontrado).forEach(columna => {
             let nomCol = columna.toLowerCase().trim();
-            if (nomCol.includes("wiki") || nomCol.includes("link") || nomCol.includes("url")) {
-                linkWiki = encontrado[columna];
-            }
+            if (nomCol.includes("wiki") || nomCol.includes("link") || nomCol.includes("url")) linkWiki = encontrado[columna];
         });
         return linkWiki;
     }
@@ -498,15 +174,11 @@
         const texto = document.getElementById('textoBusqueda').value;
         const busqueda = normalizarTexto(texto);
         if (debounceTimer) clearTimeout(debounceTimer);
-        
         if (!busqueda) {
             document.getElementById('resultado').innerHTML = "<p style='color: var(--text-light); text-align: center; font-size: 0.9em;'>Escribe para buscar institutos.</p>";
             return;
         }
-        
-        debounceTimer = setTimeout(() => {
-            buscarInstituto();
-        }, 220);
+        debounceTimer = setTimeout(() => buscarInstituto(), 220);
     }
 
     window.onload = async function() {
@@ -517,20 +189,15 @@
             try {
                 const response = await fetch(nombreArchivo);
                 if (!response.ok) throw new Error("Archivo no encontrado");
-               
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
                 const libro = XLSX.read(data, {type: 'array'});
                 const hoja = libro.Sheets[libro.SheetNames[0]];
                 const json = XLSX.utils.sheet_to_json(hoja);
-               
                 todosLosDatos = todosLosDatos.concat(json);
                 procesados++;
-            } catch (error) {
-                console.error("Error cargando archivo", error);
-            }
+            } catch (error) { console.error("Error cargando archivo", error); }
         }
-       
         if (procesados > 0) {
             document.getElementById('statusCarga').innerHTML = "🟢 " + todosLosDatos.length + " registros listos";
             document.getElementById('resultado').innerHTML = "<p style='color: var(--text-light); text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
@@ -554,9 +221,7 @@
             return;
         }
 
-        const resultados = todosLosDatos.filter(fila =>
-            fila.Nombre && normalizarTexto(fila.Nombre).includes(busqueda)
-        );
+        const resultados = todosLosDatos.filter(fila => fila.Nombre && normalizarTexto(fila.Nombre).includes(busqueda));
 
         if (resultados.length > 0) {
             let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} RESULTADO(S)</p>`;
@@ -582,9 +247,7 @@
 
                 if (linkWiki && linkWiki.toString().trim() !== "") {
                     let urlFinal = linkWiki.toString().trim();
-                    if (!urlFinal.startsWith('http')) {
-                        urlFinal = 'https://' + urlFinal;
-                    }
+                    if (!urlFinal.startsWith('http')) urlFinal = 'https://' + urlFinal;
                     htmlResultado += `
                         <a href="${escapeHtml(urlFinal)}" target="_blank" onclick="limpiarBusqueda()" class="btn-wiki">
                             abrir wiki ↗
@@ -597,9 +260,7 @@
                 htmlTotal += htmlResultado;
             });
             caja.innerHTML = htmlTotal;
-            requestAnimationFrame(() => {
-                document.querySelectorAll('.result-card').forEach(card => card.classList.add('show'));
-            });
+            requestAnimationFrame(() => document.querySelectorAll('.result-card').forEach(card => card.classList.add('show')));
         } else {
             caja.innerHTML = `<div class="resultado-vacio">No hay resultados para "${escapeHtml(busquedaOriginal)}".</div>`;
         }
@@ -607,34 +268,19 @@
 
     // Eventos
     document.getElementById('textoBusqueda').addEventListener('input', actualizarBusquedaEnVivo);
-    document.getElementById('textoBusqueda').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            buscarInstituto();
-        }
-    });
-    document.getElementById('btnBuscar').addEventListener('mousedown', function() {
-        this.style.transform = 'translateY(0) scale(0.99)';
-    });
-    document.getElementById('btnBuscar').addEventListener('mouseup', function() {
-        this.style.transform = '';
-    });
+    document.getElementById('textoBusqueda').addEventListener('keydown', (e) => { if (e.key === 'Enter') buscarInstituto(); });
+    document.getElementById('btnBuscar').addEventListener('mousedown', function() { this.style.transform = 'translateY(0) scale(0.99)'; });
+    document.getElementById('btnBuscar').addEventListener('mouseup', function() { this.style.transform = ''; });
 
-    /* BOTÓN DE AYUDA */
+    // Ayuda
     const helpBtn = document.getElementById('helpBtn');
     const helpBox = document.getElementById('helpBox');
     helpBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        if (helpBox.style.display === 'block') {
-            helpBox.style.display = 'none';
-        } else {
-            helpBox.style.display = 'block';
-        }
+        helpBox.style.display = (helpBox.style.display === 'block') ? 'none' : 'block';
     });
     document.addEventListener('click', function(e) {
-        const helpContainer = document.querySelector('.help-container');
-        if (!helpContainer.contains(e.target)) {
-            helpBox.style.display = 'none';
-        }
+        if (!document.querySelector('.help-container').contains(e.target)) helpBox.style.display = 'none';
     });
 </script>
 </body>
