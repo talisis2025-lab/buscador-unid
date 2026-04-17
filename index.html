@@ -199,6 +199,13 @@
         .btn-buscar:active {
             transform: translateY(0) scale(0.99);
         }
+        .btn-buscar:disabled {
+            background-color: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         #resultado {
             margin-top: 36px;
             display: grid;
@@ -565,11 +572,12 @@
         <h3 class="modal-title" style="margin-bottom: 10px;">Danos tu opinión</h3>
         <p style="color: var(--text-light); font-size: 0.9em; margin-bottom: 20px;">¿Encontraste un error o tienes una sugerencia? Te leemos de forma anónima.</p>
         
-        <form action="https://formspree.io/f/xeevgpea" method="POST" class="input-group">
+        <form id="formularioFeedback" action="https://formspree.io/f/xeevgpea" method="POST" class="input-group">
             <label>Tu mensaje:</label>
             <textarea name="mensaje" rows="4" required placeholder="Escribe aquí tu retroalimentación..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 12px; background: var(--input-bg); color: var(--text-main); font-family: inherit; resize: vertical; outline: none;"></textarea>
             
-            <button type="submit" class="btn-buscar" style="margin-top: 15px;">Enviar Mensaje</button>
+            <button type="submit" id="btnEnviarMensaje" class="btn-buscar" style="margin-top: 15px;">Enviar Mensaje</button>
+            <p id="mensajeEstado" style="text-align: center; font-size: 0.9em; margin-top: 10px; font-weight: 600; display: none;"></p>
         </form>
     </div>
 </div>
@@ -834,8 +842,11 @@
         }
     });
 
-    // --- FUNCIONES DEL MODAL DE FEEDBACK ---
+    // --- FUNCIONES DEL MODAL DE FEEDBACK Y AJAX ---
     const modalFeedback = document.getElementById('modalFeedback');
+    const formularioFeedback = document.getElementById('formularioFeedback');
+    const btnEnviarMensaje = document.getElementById('btnEnviarMensaje');
+    const mensajeEstado = document.getElementById('mensajeEstado');
     
     document.getElementById('btnAbrirFeedback').addEventListener('click', () => {
         modalFeedback.style.display = 'flex';
@@ -844,11 +855,60 @@
 
     function cerrarModalFeedback() {
         modalFeedback.classList.remove('active');
-        setTimeout(() => modalFeedback.style.display = 'none', 300);
+        setTimeout(() => {
+            modalFeedback.style.display = 'none';
+            mensajeEstado.style.display = 'none'; // Limpiamos el mensaje al cerrar
+        }, 300);
     }
 
     modalFeedback.addEventListener('click', (e) => {
         if(e.target === modalFeedback) cerrarModalFeedback();
+    });
+
+    // Enviar el formulario sin recargar la página (AJAX)
+    formularioFeedback.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Evita que se vaya a la página de Formspree
+        
+        const data = new FormData(formularioFeedback);
+        
+        // Cambiar estado visual del botón
+        btnEnviarMensaje.textContent = "Enviando...";
+        btnEnviarMensaje.disabled = true;
+        mensajeEstado.style.display = "none";
+
+        try {
+            const response = await fetch(formularioFeedback.action, {
+                method: formularioFeedback.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json' // Le pedimos a Formspree que responda en código, no en HTML
+                }
+            });
+
+            if (response.ok) {
+                mensajeEstado.textContent = "¡Mensaje enviado con éxito! Gracias por tu opinión.";
+                mensajeEstado.style.color = "#27ae60"; // Verde
+                mensajeEstado.style.display = "block";
+                formularioFeedback.reset(); // Limpia la cajita de texto
+                
+                // Cierra la ventanita sola después de 3 segundos
+                setTimeout(() => {
+                    cerrarModalFeedback();
+                }, 3000);
+            } else {
+                mensajeEstado.textContent = "Hubo un problema al enviar. Intenta de nuevo.";
+                mensajeEstado.style.color = "#e74c3c"; // Rojo
+                mensajeEstado.style.display = "block";
+            }
+        } catch (error) {
+            mensajeEstado.textContent = "Error de conexión. Revisa tu internet.";
+            mensajeEstado.style.color = "#e74c3c";
+            mensajeEstado.style.display = "block";
+        } finally {
+            // Regresamos el botón a la normalidad
+            btnEnviarMensaje.textContent = "Enviar Mensaje";
+            btnEnviarMensaje.disabled = false;
+        }
     });
 
     // --- CERRAR MODALES CON LA TECLA ESCAPE ---
