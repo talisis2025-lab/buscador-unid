@@ -158,6 +158,16 @@
             box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12);
             transform: translateY(-1px);
         }
+        
+        /* Estilos compartidos para inputs del modal */
+        textarea:focus, input[type="email"]:focus {
+            border-color: var(--primary) !important;
+            background: var(--card-bg) !important;
+            box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12);
+            transform: translateY(-1px);
+            transition: all 0.22s ease;
+        }
+
         input[type="text"]::placeholder {
             color: var(--text-light);
         }
@@ -207,7 +217,7 @@
             transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             animation: slideUp 0.42s ease forwards;
             opacity: 0;
-            flex-wrap: wrap; /* Permitir que los botones se acomoden */
+            flex-wrap: wrap; 
         }
         .result-card.show {
             opacity: 1;
@@ -332,7 +342,7 @@
             letter-spacing: 0.3px;
         }
 
-        /* --- ESTILOS DEL MODAL DE CARRERAS --- */
+        /* --- ESTILOS DEL MODAL DE CARRERAS Y FEEDBACK --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -401,7 +411,6 @@
             overflow-y: auto;
             padding-right: 5px;
         }
-        /* Scrollbar styles for the modal */
         .carreras-container::-webkit-scrollbar { width: 6px; }
         .carreras-container::-webkit-scrollbar-track { background: var(--bg-body); border-radius: 4px; }
         .carreras-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
@@ -429,12 +438,18 @@
             border-color: var(--primary);
         }
 
-        /* BOTÓN DE AYUDA */
+        /* BOTONES FLOTANTES DE AYUDA Y FEEDBACK */
         .help-container {
             position: fixed;
             right: 24px;
             bottom: 24px;
             z-index: 9999;
+        }
+        .feedback-container {
+            position: fixed;
+            left: 24px;
+            bottom: 24px;
+            z-index: 9998;
         }
         .help-btn {
             width: 54px;
@@ -513,13 +528,9 @@
                 text-align: center;
                 display: block;
             }
-            .help-container {
-                right: 16px;
-                bottom: 16px;
-            }
-            .help-box {
-                width: min(250px, calc(100vw - 32px));
-            }
+            .help-container { right: 16px; bottom: 16px; }
+            .feedback-container { left: 16px; bottom: 16px; }
+            .help-box { width: min(250px, calc(100vw - 32px)); }
         }
     </style>
 </head>
@@ -541,6 +552,25 @@
     </div>
     <div id="resultado">
         <p style="color: var(--text-light); text-align: center; font-size: 0.9em;">Esperando entrada de datos...</p>
+    </div>
+</div>
+
+<div class="feedback-container">
+    <button id="btnAbrirFeedback" class="help-btn" style="background: var(--secondary); color: var(--card-bg);" title="Enviar Opinión">💬</button>
+</div>
+
+<div id="modalFeedback" class="modal-overlay">
+    <div class="modal-content" style="max-width: 400px;">
+        <button class="modal-close" onclick="cerrarModalFeedback()">✕</button>
+        <h3 class="modal-title" style="margin-bottom: 10px;">Danos tu opinión</h3>
+        <p style="color: var(--text-light); font-size: 0.9em; margin-bottom: 20px;">¿Encontraste un error o tienes una sugerencia? Te leemos de forma anónima.</p>
+        
+        <form action="https://formspree.io/f/xeevgpea" method="POST" class="input-group">
+            <label>Tu mensaje:</label>
+            <textarea name="mensaje" rows="4" required placeholder="Escribe aquí tu retroalimentación..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 12px; background: var(--input-bg); color: var(--text-main); font-family: inherit; resize: vertical; outline: none;"></textarea>
+            
+            <button type="submit" class="btn-buscar" style="margin-top: 15px;">Enviar Mensaje</button>
+        </form>
     </div>
 </div>
 
@@ -693,7 +723,6 @@
             return;
         }
 
-        // Modificado para buscar por Nombre de campus O por Carrera
         const resultados = todosLosDatos.filter(fila => {
             const nombreCampus = normalizarTexto(fila.Nombre);
             const carrerasCampus = normalizarTexto(obtenerCarreras(fila));
@@ -745,7 +774,6 @@
                         </a>
                     `;
                 } else if (!carrerasInfo || carrerasInfo.trim() === "") {
-                    // Si no hay wiki y tampoco carreras, mostrar mensaje
                     htmlResultado += `<span class="sin-wiki">Sin links o carreras</span>`;
                 }
                 
@@ -778,7 +806,6 @@
         title.textContent = `Carreras en ${nombreCampus}`;
         list.innerHTML = "";
         
-        // Separa las carreras por comas (o saltos de línea dependiendo de cómo estén en el excel)
         let carrerasArray = carrerasStr.split(',').map(c => c.trim()).filter(c => c);
         
         if(carrerasArray.length > 0) {
@@ -792,24 +819,47 @@
         }
         
         modal.style.display = 'flex';
-        // Delay para permitir que la transición CSS actúe
         setTimeout(() => modal.classList.add('active'), 10);
     }
 
     function cerrarModalCarreras() {
         const modal = document.getElementById('modalCarreras');
         modal.classList.remove('active');
-        setTimeout(() => modal.style.display = 'none', 300); // Espera a que termine la animación
+        setTimeout(() => modal.style.display = 'none', 300); 
     }
 
-    // Cerrar el modal al hacer clic en el fondo gris (overlay)
     document.getElementById('modalCarreras').addEventListener('click', (e) => {
         if(e.target === document.getElementById('modalCarreras')) {
             cerrarModalCarreras();
         }
     });
 
-    // Eventos
+    // --- FUNCIONES DEL MODAL DE FEEDBACK ---
+    const modalFeedback = document.getElementById('modalFeedback');
+    
+    document.getElementById('btnAbrirFeedback').addEventListener('click', () => {
+        modalFeedback.style.display = 'flex';
+        setTimeout(() => modalFeedback.classList.add('active'), 10);
+    });
+
+    function cerrarModalFeedback() {
+        modalFeedback.classList.remove('active');
+        setTimeout(() => modalFeedback.style.display = 'none', 300);
+    }
+
+    modalFeedback.addEventListener('click', (e) => {
+        if(e.target === modalFeedback) cerrarModalFeedback();
+    });
+
+    // --- CERRAR MODALES CON LA TECLA ESCAPE ---
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+            cerrarModalCarreras();
+            cerrarModalFeedback();
+        }
+    });
+
+    // Eventos Buscador
     document.getElementById('textoBusqueda').addEventListener('input', actualizarBusquedaEnVivo);
     document.getElementById('textoBusqueda').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
