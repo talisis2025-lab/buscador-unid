@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscador Interno | UNID</title>
-        <link rel="icon" type="image/jpeg" href="https://blog-unid.talisis.com/hubfs/assets-landings/img/256x256bb.jpg">
+    <link rel="icon" type="image/jpeg" href="https://blog-unid.talisis.com/hubfs/assets-landings/img/256x256bb.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
@@ -136,6 +136,75 @@
             flex-direction: column;
             gap: 15px;
         }
+        
+        /* --- ESTILOS DEL SWITCH ANIMADO --- */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+            padding: 10px;
+            background: var(--status-bg);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+        .toggle-text {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        .toggle-text.active {
+            color: var(--secondary);
+            font-size: 0.95em;
+            font-weight: 800;
+        }
+        body.dark-mode .toggle-text.active {
+            color: var(--primary);
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background-color: var(--secondary);
+        }
+        body.dark-mode .slider { background-color: #475569; }
+        body.dark-mode input:checked + .slider:before { background-color: #1a1a1a; }
+        
         .search-wrap {
             position: relative;
         }
@@ -152,15 +221,12 @@
             color: var(--text-main);
             box-shadow: 0 0 0 rgba(255, 195, 0, 0);
         }
-        
         input[type="text"]:focus {
             border-color: var(--primary);
             background: var(--card-bg);
             box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12);
             transform: translateY(-1px);
         }
-        
-        /* Estilos compartidos para inputs del modal */
         textarea:focus, input[type="email"]:focus {
             border-color: var(--primary) !important;
             background: var(--card-bg) !important;
@@ -168,7 +234,6 @@
             transform: translateY(-1px);
             transition: all 0.22s ease;
         }
-
         input[type="text"]::placeholder {
             color: var(--text-light);
         }
@@ -184,7 +249,6 @@
             transition: transform 0.18s ease, box-shadow 0.22s ease, background-color 0.22s ease;
             will-change: transform;
         }
-        
         body.dark-mode .btn-buscar {
             background-color: var(--primary);
             color: #121212;
@@ -200,19 +264,12 @@
         .btn-buscar:active {
             transform: translateY(0) scale(0.99);
         }
-        .btn-buscar:disabled {
-            background-color: var(--text-light);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
 
         #resultado {
             margin-top: 36px;
             display: grid;
             gap: 14px;
         }
-        
         .result-card {
             background: var(--card-bg);
             padding: 24px;
@@ -227,9 +284,7 @@
             opacity: 0;
             flex-wrap: wrap; 
         }
-        .result-card.show {
-            opacity: 1;
-        }
+        .result-card.show { opacity: 1; }
         .result-card:hover {
             border-color: var(--primary);
             transform: translateY(-3px) scale(1.01);
@@ -318,30 +373,15 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        
         body.dark-mode .spinner {
             border: 2px solid rgba(255,255,255,0.12);
             border-top-color: var(--primary);
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(18px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .results-count {
             margin: 0 0 10px 0;
             color: var(--text-light);
@@ -350,7 +390,7 @@
             letter-spacing: 0.3px;
         }
 
-        /* --- ESTILOS DEL MODAL DE CARRERAS Y FEEDBACK --- */
+        /* Modales */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -363,10 +403,7 @@
             transition: opacity 0.3s ease;
             backdrop-filter: blur(4px);
         }
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
+        .modal-overlay.active { display: flex; opacity: 1; }
         .modal-content {
             background: var(--card-bg);
             padding: 30px;
@@ -382,9 +419,7 @@
             transform: translateY(20px);
             transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
         }
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
         .modal-close {
             position: absolute;
             top: 20px;
@@ -408,29 +443,14 @@
             border-color: var(--primary);
         }
         .modal-title { 
-            margin-top: 0; 
-            font-weight: 800; 
-            color: var(--secondary); 
-            margin-bottom: 20px;
-            padding-right: 30px;
-            font-size: 1.4em;
+            margin-top: 0; font-weight: 800; color: var(--secondary); margin-bottom: 20px;
+            padding-right: 30px; font-size: 1.4em;
         }
-        .carreras-container {
-            overflow-y: auto;
-            padding-right: 5px;
-        }
+        .carreras-container { overflow-y: auto; padding-right: 5px; }
         .carreras-container::-webkit-scrollbar { width: 6px; }
         .carreras-container::-webkit-scrollbar-track { background: var(--bg-body); border-radius: 4px; }
         .carreras-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-        
-        .carreras-list {
-            list-style: none; 
-            padding: 0; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px;
-        }
+        .carreras-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
         .carreras-list li {
             background: var(--status-bg);
             padding: 12px 16px;
@@ -446,96 +466,34 @@
             border-color: var(--primary);
         }
 
-        /* BOTONES FLOTANTES DE AYUDA Y FEEDBACK */
-        .help-container {
-            position: fixed;
-            right: 24px;
-            bottom: 24px;
-            z-index: 9999;
-        }
-        .feedback-container {
-            position: fixed;
-            left: 24px;
-            bottom: 24px;
-            z-index: 9998;
-        }
+        /* BOTONES FLOTANTES */
+        .help-container { position: fixed; right: 24px; bottom: 24px; z-index: 9999; }
+        .feedback-container { position: fixed; left: 24px; bottom: 24px; z-index: 9998; }
         .help-btn {
-            width: 54px;
-            height: 54px;
-            border: none;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #1a1a1a;
-            font-size: 1.4em;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+            width: 54px; height: 54px; border: none; border-radius: 50%;
+            background: var(--primary); color: #1a1a1a; font-size: 1.4em; font-weight: 800;
+            cursor: pointer; box-shadow: 0 14px 28px rgba(0,0,0,0.18);
             transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
-        .help-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 18px 32px rgba(0,0,0,0.22);
-            background: var(--primary-dark);
-        }
+        .help-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 18px 32px rgba(0,0,0,0.22); background: var(--primary-dark); }
         .help-box {
-            position: absolute;
-            bottom: 68px;
-            right: 0;
-            width: 250px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            padding: 16px 18px;
-            color: var(--text-main);
-            display: none;
-            animation: fadeInUp 0.25s ease both;
-            font-size: 0.88em;
-            line-height: 1.45;
+            position: absolute; bottom: 68px; right: 0; width: 250px; background: var(--card-bg);
+            border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--shadow);
+            padding: 16px 18px; color: var(--text-main); display: none; animation: fadeInUp 0.25s ease both;
+            font-size: 0.88em; line-height: 1.45;
         }
-        .help-box strong {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--secondary);
-            font-size: 1em;
-        }
-        .help-mail {
-            font-weight: 800;
-            color: var(--secondary);
-            word-break: break-word;
-        }
+        .help-box strong { display: block; margin-bottom: 6px; color: var(--secondary); font-size: 1em; }
+        .help-mail { font-weight: 800; color: var(--secondary); word-break: break-word; }
 
         @media (max-width: 640px) {
             body { padding: 14px; }
-            .contenedor {
-                padding: 26px 18px;
-                margin-top: 16px;
-                border-radius: 20px;
-            }
-            .btn-dark-mode {
-                top: 15px;
-                right: 15px;
-            }
-            h2 {
-                font-size: 1.8em;
-                margin-bottom: 24px;
-            }
-            .result-card {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .btn-actions {
-                flex-direction: column;
-                width: 100%;
-            }
-            .btn-wiki {
-                width: 100%;
-                text-align: center;
-                display: block;
-            }
+            .contenedor { padding: 26px 18px; margin-top: 16px; border-radius: 20px; }
+            .btn-dark-mode { top: 15px; right: 15px; }
+            h2 { font-size: 1.8em; margin-bottom: 24px; }
+            .result-card { flex-direction: column; align-items: stretch; }
+            .btn-actions { flex-direction: column; width: 100%; }
+            .btn-wiki { width: 100%; text-align: center; display: block; }
             .help-container { right: 16px; bottom: 16px; }
             .feedback-container { left: 16px; bottom: 16px; }
             .help-box { width: min(250px, calc(100vw - 32px)); }
@@ -550,14 +508,25 @@
         <span class="status-text" style="color:var(--secondary)">Estado:</span>
         <span id="statusCarga" class="status-text"><span class="spinner"></span> Conectando base de datos...</span>
     </div>
+    
     <div class="input-group">
-        <label>Documentación del Campus o Carrera</label>
+        
+        <div class="toggle-wrapper">
+            <span id="lblCampus" class="toggle-text active" onclick="document.getElementById('chkModo').click()">🏫 Info General</span>
+            <label class="switch">
+                <input type="checkbox" id="chkModo">
+                <span class="slider"></span>
+            </label>
+            <span id="lblPlanes" class="toggle-text" onclick="document.getElementById('chkModo').click()">📄 Planes de Estudio</span>
+        </div>
+
         <div class="search-wrap">
             <input type="text" id="textoBusqueda" placeholder="Ej: Monterrey, Derecho, Diseño..." autocomplete="off">
         </div>
         <div class="search-hint">Escribe para buscar en vivo. No es necesario presionar Enter.</div>
         <button class="btn-buscar" id="btnBuscar" onclick="buscarInstituto()">Realizar Búsqueda</button>
     </div>
+    
     <div id="resultado">
         <p style="color: var(--text-light); text-align: center; font-size: 0.9em;">Esperando entrada de datos...</p>
     </div>
@@ -597,8 +566,7 @@
         <button class="modal-close" onclick="cerrarModalCarreras()">✕</button>
         <h3 id="modalTitle" class="modal-title">Carreras Ofertadas</h3>
         <div class="carreras-container">
-            <ul id="modalList" class="carreras-list">
-                </ul>
+            <ul id="modalList" class="carreras-list"></ul>
         </div>
     </div>
 </div>
@@ -618,28 +586,40 @@
     }
     btnDarkMode.addEventListener('click', toggleDarkMode);
 
-    // Lógica del Buscador
-    let todosLosDatos = [];
+    // Lógica del Buscador y Datos Duales
+    let datosCampus = [];
+    let datosPlanes = [];
     const archivosA_Cargar = ['database.xlsx'];
     let debounceTimer = null;
 
+    // Elementos del Switch
+    const chkModo = document.getElementById('chkModo');
+    const lblCampus = document.getElementById('lblCampus');
+    const lblPlanes = document.getElementById('lblPlanes');
+    const inputBusqueda = document.getElementById('textoBusqueda');
+
+    chkModo.addEventListener('change', () => {
+        if(chkModo.checked) {
+            lblPlanes.classList.add('active');
+            lblCampus.classList.remove('active');
+            inputBusqueda.placeholder = "Ej: Derecho, Sistemas, Administración...";
+        } else {
+            lblCampus.classList.add('active');
+            lblPlanes.classList.remove('active');
+            inputBusqueda.placeholder = "Ej: Monterrey, Derecho, Diseño...";
+        }
+        inputBusqueda.focus();
+        buscarInstituto(); // Refrescar búsqueda al cambiar de pestaña
+    });
+
     function normalizarTexto(texto) {
-        return (texto ?? "")
-            .toString()
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim();
+        return (texto ?? "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
     }
     
     function escapeHtml(texto) {
-        return (texto ?? "")
-            .toString()
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll("\"", "&quot;")
-            .replaceAll("'", "&#39;");
+        return (texto ?? "").toString()
+            .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+            .replaceAll("\"", "&quot;").replaceAll("'", "&#39;");
     }
     
     function obtenerLinkWiki(encontrado) {
@@ -657,14 +637,10 @@
         let carrerasStr = "";
         Object.keys(encontrado).forEach(columna => {
             let nomCol = columna.toLowerCase().trim();
-            // Detecta columnas que contengan la oferta de carreras
             if (nomCol.includes("carrera") || nomCol.includes("oferta") || nomCol.includes("programa") || nomCol.includes("licenciatura")) {
-                if (encontrado[columna]) {
-                    carrerasStr += encontrado[columna] + ", ";
-                }
+                if (encontrado[columna]) carrerasStr += encontrado[columna] + ", ";
             }
         });
-        // Quita la última coma y espacio si existe
         return carrerasStr.replace(/,\s*$/, "");
     }
 
@@ -673,47 +649,48 @@
     }
 
     function actualizarBusquedaEnVivo() {
-        const texto = document.getElementById('textoBusqueda').value;
-        const busqueda = normalizarTexto(texto);
         if (debounceTimer) clearTimeout(debounceTimer);
-        
-        if (!busqueda) {
-            document.getElementById('resultado').innerHTML = "<p style='color: var(--text-light); text-align: center; font-size: 0.9em;'>Escribe para buscar institutos o carreras.</p>";
-            return;
-        }
-        
-        debounceTimer = setTimeout(() => {
-            buscarInstituto();
-        }, 220);
+        debounceTimer = setTimeout(() => { buscarInstituto(); }, 220);
     }
 
     window.onload = async function() {
-        let procesados = 0;
         const status = document.getElementById('statusCarga');
         status.innerHTML = "<span class='spinner'></span> Cargando base de datos...";
-        for (const nombreArchivo of archivosA_Cargar) {
-            try {
-                const response = await fetch(nombreArchivo);
-                if (!response.ok) throw new Error("Archivo no encontrado");
-                
-                const arrayBuffer = await response.arrayBuffer();
-                const data = new Uint8Array(arrayBuffer);
-                const libro = XLSX.read(data, {type: 'array'});
-                const hoja = libro.Sheets[libro.SheetNames[0]];
-                const json = XLSX.utils.sheet_to_json(hoja);
-                
-                todosLosDatos = todosLosDatos.concat(json);
-                procesados++;
-            } catch (error) {
-                console.error("Error cargando archivo", error);
+        try {
+            const response = await fetch(archivosA_Cargar[0]);
+            if (!response.ok) throw new Error("Archivo no encontrado");
+            
+            const arrayBuffer = await response.arrayBuffer();
+            const data = new Uint8Array(arrayBuffer);
+            const libro = XLSX.read(data, {type: 'array'});
+            
+            // Cargar Hoja 1 (Campus)
+            if(libro.SheetNames.length > 0) {
+                datosCampus = XLSX.utils.sheet_to_json(libro.Sheets[libro.SheetNames[0]]);
             }
-        }
-        
-        if (procesados > 0) {
-            document.getElementById('statusCarga').innerHTML = "🟢 " + todosLosDatos.length + " registros listos";
-            document.getElementById('resultado').innerHTML = "<p style='color: var(--text-light); text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
-        } else {
-            document.getElementById('statusCarga').innerHTML = "🔴 Error de conexión";
+            
+            // Cargar Hoja 2 (Planes de Estudio)
+            let nombreHojaPlanes = "Hoja2"; // Nombre por defecto
+            if(libro.Sheets["Hoja2"]) {
+                nombreHojaPlanes = "Hoja2";
+            } else if (libro.SheetNames.length > 1) {
+                nombreHojaPlanes = libro.SheetNames[1]; // Tomar la segunda hoja exista como se llame
+            }
+            
+            if(libro.Sheets[nombreHojaPlanes]) {
+                datosPlanes = XLSX.utils.sheet_to_json(libro.Sheets[nombreHojaPlanes]);
+            }
+            
+            const totalRegistros = datosCampus.length + datosPlanes.length;
+            if (totalRegistros > 0) {
+                status.innerHTML = `🟢 DB Lista (${datosCampus.length} info | ${datosPlanes.length} planes)`;
+                document.getElementById('resultado').innerHTML = "<p style='color: var(--text-light); text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
+            } else {
+                throw new Error("Libro vacío");
+            }
+        } catch (error) {
+            console.error("Error cargando archivo", error);
+            status.innerHTML = "🔴 Error de conexión";
             document.getElementById('resultado').innerHTML = "<div class='resultado-vacio'>No fue posible cargar la base de datos.</div>";
         }
     };
@@ -722,33 +699,42 @@
         const busquedaOriginal = document.getElementById('textoBusqueda').value.trim();
         const busqueda = normalizarTexto(busquedaOriginal);
         const caja = document.getElementById('resultado');
+        const modoPlanes = chkModo.checked; // true = buscar en Planes, false = buscar en Campus
 
-        if (todosLosDatos.length === 0) {
-            caja.innerHTML = `<p style="color:#d63031; text-align:center;">Base de datos no disponible.</p>`;
-            return;
-        }
         if (busqueda === "") {
             caja.innerHTML = `<p style="color:var(--text-light); text-align:center;">Por favor, ingresa una búsqueda.</p>`;
             return;
         }
 
-        const resultados = todosLosDatos.filter(fila => {
-            const nombreCampus = normalizarTexto(fila.Nombre);
-            const carrerasCampus = normalizarTexto(obtenerCarreras(fila));
-            return nombreCampus.includes(busqueda) || carrerasCampus.includes(busqueda);
-        });
+        if (!modoPlanes) {
+            // BUSQUEDA NORMAL (CAMPUS)
+            if(datosCampus.length === 0) return caja.innerHTML = `<p style="color:#d63031; text-align:center;">Datos de campus no disponibles.</p>`;
+            const resultados = datosCampus.filter(fila => {
+                const nombreCampus = normalizarTexto(fila.Nombre);
+                const carrerasCampus = normalizarTexto(obtenerCarreras(fila));
+                return nombreCampus.includes(busqueda) || carrerasCampus.includes(busqueda);
+            });
+            renderizarResultadosCampus(resultados, caja, busquedaOriginal);
+        } else {
+            // BUSQUEDA PLANES DE ESTUDIO
+            if(datosPlanes.length === 0) return caja.innerHTML = `<p style="color:#d63031; text-align:center;">Datos de planes no disponibles (Asegúrate de tener la Hoja2).</p>`;
+            const resultados = datosPlanes.filter(fila => {
+                const nombreCarrera = normalizarTexto(fila.Carrera);
+                return nombreCarrera.includes(busqueda);
+            });
+            renderizarResultadosPlanes(resultados, caja, busquedaOriginal);
+        }
+    }
 
+    function renderizarResultadosCampus(resultados, caja, busquedaOriginal) {
         if (resultados.length > 0) {
             let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} RESULTADO(S)</p>`;
             resultados.forEach((encontrado, idx) => {
                 let linkWiki = obtenerLinkWiki(encontrado);
                 let carrerasInfo = obtenerCarreras(encontrado);
-                const nombreReal = encontrado.Nombre || "Campus Sin Nombre";
-                const tipo = encontrado.Tipo || "Instituto";
-                const zona = encontrado.Zona ? `Zona ${encontrado.Zona}` : "";
-                const nombreHtml = escapeHtml(nombreReal);
-                const tipoHtml = escapeHtml(tipo);
-                const zonaHtml = escapeHtml(zona);
+                const nombreHtml = escapeHtml(encontrado.Nombre || "Campus Sin Nombre");
+                const tipoHtml = escapeHtml(encontrado.Tipo || "Instituto");
+                const zonaHtml = escapeHtml(encontrado.Zona ? `Zona ${encontrado.Zona}` : "");
 
                 let htmlResultado = `
                     <div class="result-card" style="animation-delay:${Math.min(idx * 0.05, 0.22)}s;">
@@ -756,54 +742,81 @@
                             <div class="instituto-nombre">${nombreHtml}</div>
                             <div class="meta-row">
                                 <span class="pill"><i class="fas fa-tag"></i> ${tipoHtml}</span>
-                                ${zona ? `<span class="pill"><i class="fas fa-map-marker-alt"></i> ${zonaHtml}</span>` : ""}
+                                ${encontrado.Zona ? `<span class="pill"><i class="fas fa-map-marker-alt"></i> ${zonaHtml}</span>` : ""}
                             </div>
                         </div>
                         <div class="btn-actions">
                 `;
-                
-                // Botón de Ver Carreras
                 if(carrerasInfo && carrerasInfo.trim() !== "") {
-                    htmlResultado += `
-                        <button class="btn-wiki btn-ver-carreras" data-nombre="${nombreHtml}" data-carreras="${escapeHtml(carrerasInfo)}">
-                            Ver carreras 🎓
-                        </button>
-                    `;
+                    htmlResultado += `<button class="btn-wiki btn-ver-carreras" data-nombre="${nombreHtml}" data-carreras="${escapeHtml(carrerasInfo)}">Ver carreras 🎓</button>`;
                 }
-
-                // Botón de Abrir Wiki original
                 if (linkWiki && linkWiki.toString().trim() !== "") {
                     let urlFinal = linkWiki.toString().trim();
-                    if (!urlFinal.startsWith('http')) {
-                        urlFinal = 'https://' + urlFinal;
-                    }
-                    htmlResultado += `
-                        <a href="${escapeHtml(urlFinal)}" target="_blank" onclick="limpiarBusqueda()" class="btn-wiki">
-                            abrir wiki ↗
-                        </a>
-                    `;
+                    if (!urlFinal.startsWith('http')) urlFinal = 'https://' + urlFinal;
+                    htmlResultado += `<a href="${escapeHtml(urlFinal)}" target="_blank" onclick="limpiarBusqueda()" class="btn-wiki">abrir wiki ↗</a>`;
                 } else if (!carrerasInfo || carrerasInfo.trim() === "") {
                     htmlResultado += `<span class="sin-wiki">Sin links o carreras</span>`;
+                }
+                htmlResultado += `</div></div>`;
+                htmlTotal += htmlResultado;
+            });
+            caja.innerHTML = htmlTotal;
+            asignarEventosCarreras();
+            animarTarjetas();
+        } else {
+            caja.innerHTML = `<div class="resultado-vacio">No hay resultados en Campus para "${escapeHtml(busquedaOriginal)}".</div>`;
+        }
+    }
+
+    function renderizarResultadosPlanes(resultados, caja, busquedaOriginal) {
+        if (resultados.length > 0) {
+            let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} PLAN(ES) DE ESTUDIO</p>`;
+            resultados.forEach((encontrado, idx) => {
+                const nombreCarrera = escapeHtml(encontrado.Carrera || "Carrera sin especificar");
+                const linkPlan = encontrado.Link_Plan || "";
+
+                let htmlResultado = `
+                    <div class="result-card" style="animation-delay:${Math.min(idx * 0.05, 0.22)}s; border-left: 4px solid var(--primary);">
+                        <div class="instituto-info">
+                            <div class="instituto-nombre">📄 ${nombreCarrera}</div>
+                        </div>
+                        <div class="btn-actions">
+                `;
+                
+                if (linkPlan.trim() !== "") {
+                    let urlFinal = linkPlan.toString().trim();
+                    if (!urlFinal.startsWith('http')) urlFinal = 'https://' + urlFinal;
+                    htmlResultado += `
+                        <a href="${escapeHtml(urlFinal)}" target="_blank" onclick="limpiarBusqueda()" class="btn-wiki">
+                            Ver Plan de Estudio ⬇
+                        </a>
+                    `;
+                } else {
+                    htmlResultado += `<span class="sin-wiki">Link no disponible</span>`;
                 }
                 
                 htmlResultado += `</div></div>`;
                 htmlTotal += htmlResultado;
             });
             caja.innerHTML = htmlTotal;
-            
-            // Asignar eventos a los botones de carreras generados
-            document.querySelectorAll('.btn-ver-carreras').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    abrirModalCarreras(e.target.getAttribute('data-nombre'), e.target.getAttribute('data-carreras'));
-                });
-            });
-
-            requestAnimationFrame(() => {
-                document.querySelectorAll('.result-card').forEach(card => card.classList.add('show'));
-            });
+            animarTarjetas();
         } else {
-            caja.innerHTML = `<div class="resultado-vacio">No hay resultados para "${escapeHtml(busquedaOriginal)}".</div>`;
+            caja.innerHTML = `<div class="resultado-vacio">No hay planes de estudio para "${escapeHtml(busquedaOriginal)}".</div>`;
         }
+    }
+
+    function animarTarjetas() {
+        requestAnimationFrame(() => {
+            document.querySelectorAll('.result-card').forEach(card => card.classList.add('show'));
+        });
+    }
+
+    function asignarEventosCarreras() {
+        document.querySelectorAll('.btn-ver-carreras').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                abrirModalCarreras(e.target.getAttribute('data-nombre'), e.target.getAttribute('data-carreras'));
+            });
+        });
     }
 
     // --- FUNCIONES DEL MODAL DE CARRERAS ---
@@ -811,12 +824,9 @@
         const modal = document.getElementById('modalCarreras');
         const title = document.getElementById('modalTitle');
         const list = document.getElementById('modalList');
-        
         title.textContent = `Carreras en ${nombreCampus}`;
         list.innerHTML = "";
-        
         let carrerasArray = carrerasStr.split(',').map(c => c.trim()).filter(c => c);
-        
         if(carrerasArray.length > 0) {
             carrerasArray.forEach(carrera => {
                 const li = document.createElement('li');
@@ -826,21 +836,16 @@
         } else {
             list.innerHTML = "<li>No hay información detallada de las carreras.</li>";
         }
-        
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('active'), 10);
     }
-
     function cerrarModalCarreras() {
         const modal = document.getElementById('modalCarreras');
         modal.classList.remove('active');
         setTimeout(() => modal.style.display = 'none', 300); 
     }
-
     document.getElementById('modalCarreras').addEventListener('click', (e) => {
-        if(e.target === document.getElementById('modalCarreras')) {
-            cerrarModalCarreras();
-        }
+        if(e.target === document.getElementById('modalCarreras')) cerrarModalCarreras();
     });
 
     // --- FUNCIONES DEL MODAL DE FEEDBACK Y AJAX ---
@@ -853,103 +858,63 @@
         modalFeedback.style.display = 'flex';
         setTimeout(() => modalFeedback.classList.add('active'), 10);
     });
-
     function cerrarModalFeedback() {
         modalFeedback.classList.remove('active');
         setTimeout(() => {
             modalFeedback.style.display = 'none';
-            mensajeEstado.style.display = 'none'; // Limpiamos el mensaje al cerrar
+            mensajeEstado.style.display = 'none'; 
         }, 300);
     }
-
     modalFeedback.addEventListener('click', (e) => {
         if(e.target === modalFeedback) cerrarModalFeedback();
     });
-
-    // Enviar el formulario sin recargar la página (AJAX)
     formularioFeedback.addEventListener('submit', async function(e) {
-        e.preventDefault(); // Evita que se vaya a la página de Formspree
-        
+        e.preventDefault(); 
         const data = new FormData(formularioFeedback);
-        
-        // Cambiar estado visual del botón
-        btnEnviarMensaje.textContent = "Enviando...";
-        btnEnviarMensaje.disabled = true;
-        mensajeEstado.style.display = "none";
-
+        btnEnviarMensaje.textContent = "Enviando..."; btnEnviarMensaje.disabled = true; mensajeEstado.style.display = "none";
         try {
             const response = await fetch(formularioFeedback.action, {
-                method: formularioFeedback.method,
-                body: data,
-                headers: {
-                    'Accept': 'application/json' // Le pedimos a Formspree que responda en código, no en HTML
-                }
+                method: formularioFeedback.method, body: data, headers: { 'Accept': 'application/json' }
             });
-
             if (response.ok) {
                 mensajeEstado.textContent = "¡Mensaje enviado con éxito! Gracias por tu opinión.";
-                mensajeEstado.style.color = "#27ae60"; // Verde
-                mensajeEstado.style.display = "block";
-                formularioFeedback.reset(); // Limpia la cajita de texto
-                
-                // Cierra la ventanita sola después de 3 segundos
-                setTimeout(() => {
-                    cerrarModalFeedback();
-                }, 3000);
+                mensajeEstado.style.color = "#27ae60"; mensajeEstado.style.display = "block";
+                formularioFeedback.reset(); 
+                setTimeout(() => { cerrarModalFeedback(); }, 3000);
             } else {
                 mensajeEstado.textContent = "Hubo un problema al enviar. Intenta de nuevo.";
-                mensajeEstado.style.color = "#e74c3c"; // Rojo
-                mensajeEstado.style.display = "block";
+                mensajeEstado.style.color = "#e74c3c"; mensajeEstado.style.display = "block";
             }
         } catch (error) {
             mensajeEstado.textContent = "Error de conexión. Revisa tu internet.";
-            mensajeEstado.style.color = "#e74c3c";
-            mensajeEstado.style.display = "block";
+            mensajeEstado.style.color = "#e74c3c"; mensajeEstado.style.display = "block";
         } finally {
-            // Regresamos el botón a la normalidad
-            btnEnviarMensaje.textContent = "Enviar Mensaje";
-            btnEnviarMensaje.disabled = false;
+            btnEnviarMensaje.textContent = "Enviar Mensaje"; btnEnviarMensaje.disabled = false;
         }
     });
 
-    // --- CERRAR MODALES CON LA TECLA ESCAPE ---
     document.addEventListener('keydown', (e) => {
-        if (e.key === "Escape") {
-            cerrarModalCarreras();
-            cerrarModalFeedback();
-        }
+        if (e.key === "Escape") { cerrarModalCarreras(); cerrarModalFeedback(); }
     });
 
     // Eventos Buscador
     document.getElementById('textoBusqueda').addEventListener('input', actualizarBusquedaEnVivo);
     document.getElementById('textoBusqueda').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            buscarInstituto();
-        }
+        if (e.key === 'Enter') buscarInstituto();
     });
-    document.getElementById('btnBuscar').addEventListener('mousedown', function() {
-        this.style.transform = 'translateY(0) scale(0.99)';
-    });
-    document.getElementById('btnBuscar').addEventListener('mouseup', function() {
-        this.style.transform = '';
-    });
+    document.getElementById('btnBuscar').addEventListener('mousedown', function() { this.style.transform = 'translateY(0) scale(0.99)'; });
+    document.getElementById('btnBuscar').addEventListener('mouseup', function() { this.style.transform = ''; });
 
     /* BOTÓN DE AYUDA */
     const helpBtn = document.getElementById('helpBtn');
     const helpBox = document.getElementById('helpBox');
     helpBtn.addEventListener('click', function(e) {
         e.stopPropagation();
-        if (helpBox.style.display === 'block') {
-            helpBox.style.display = 'none';
-        } else {
-            helpBox.style.display = 'block';
-        }
+        helpBox.style.display = helpBox.style.display === 'block' ? 'none' : 'block';
     });
     document.addEventListener('click', function(e) {
         const helpContainer = document.querySelector('.help-container');
-        if (!helpContainer.contains(e.target)) {
-            helpBox.style.display = 'none';
-        }
+        if (!helpContainer.contains(e.target)) helpBox.style.display = 'none';
     });
 </script>
 </body>
