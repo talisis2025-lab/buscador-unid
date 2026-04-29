@@ -804,7 +804,7 @@
         }
     }
 
-    // --- RENDERIZADO CON DOBLE BOTÓN PARA PLANES ---
+    // --- RENDERIZADO CON LÓGICA DE DESCARGA PARA SHAREPOINT ---
     function renderizarResultadosPlanes(resultados, caja, busquedaOriginal) {
         if (resultados.length > 0) {
             let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} PLAN(ES) DE ESTUDIO</p>`;
@@ -824,8 +824,16 @@
                     let urlFinal = linkPlan.toString().trim();
                     if (!urlFinal.startsWith('http')) urlFinal = 'https://' + urlFinal;
                     
-                    // Creación del trigger de descarga automática para SharePoint
-                    const downloadLink = urlFinal.includes('?') ? `${urlFinal}&download=1` : `${urlFinal}?download=1`;
+                    // LÓGICA DE LIMPIEZA Y DESCARGA PARA SHAREPOINT
+                    let downloadLink = urlFinal;
+                    
+                    // Si el link de SharePoint trae "web=1", lo reemplazamos por "download=1" para forzar la descarga
+                    if (downloadLink.includes('web=1')) {
+                        downloadLink = downloadLink.replace('web=1', 'download=1');
+                    } else {
+                        // Si no lo trae, simplemente le agregamos el parámetro al final
+                        downloadLink += downloadLink.includes('?') ? '&download=1' : '?download=1';
+                    }
                     
                     htmlResultado += `
                         <a href="${escapeHtml(urlFinal)}" target="_blank" onclick="limpiarBusqueda()" class="btn-secondary">
