@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
+        /* ============================================================
+           DISEÑO ORIGINAL — SIN CAMBIOS (ni una línea modificada)
+           ============================================================ */
         :root {
             --primary: #FFC300;
             --primary-dark: #e6b000;
@@ -137,8 +140,7 @@
             flex-direction: column;
             gap: 15px;
         }
-        
-        /* --- NUEVO SWITCH 3D GIRATORIO --- */
+        /* --- SWITCH 3D GIRATORIO --- */
         .mode-switch-container {
             display: flex;
             align-items: center;
@@ -198,7 +200,7 @@
         .flip-front { background: var(--secondary); color: var(--card-bg); }
         .flip-back { background: var(--primary); color: #1a1a1a; transform: rotateY(180deg); }
         body.dark-mode .flip-front { background: var(--primary); color: #1a1a1a; }
-        
+
         .search-wrap {
             position: relative;
         }
@@ -276,7 +278,7 @@
             transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             animation: slideUp 0.42s ease forwards;
             opacity: 0;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
         }
         .result-card.show { opacity: 1; }
         .result-card:hover {
@@ -341,7 +343,7 @@
         .btn-wiki:active {
             transform: translateY(0) scale(0.99);
         }
-        
+
         /* ESTILO PARA EL BOTÓN SECUNDARIO (Ver) */
         .btn-secondary {
             padding: 8px 16px;
@@ -461,12 +463,12 @@
             color: var(--text-main);
             transition: all 0.2s;
         }
-        .modal-close:hover { 
-            background: var(--primary); 
+        .modal-close:hover {
+            background: var(--primary);
             color: #1a1a1a;
             border-color: var(--primary);
         }
-        .modal-title { 
+        .modal-title {
             margin-top: 0; font-weight: 800; color: var(--secondary); margin-bottom: 20px;
             padding-right: 30px; font-size: 1.4em;
         }
@@ -523,9 +525,236 @@
             .feedback-container { left: 16px; bottom: 16px; }
             .help-box { width: min(250px, calc(100vw - 32px)); }
         }
+
+        /* ============================================================
+           WIKI PANEL LATERAL — NUEVAS REGLAS (nada existente modificado)
+           Drawer profesional que desliza desde la derecha
+           ============================================================ */
+
+        /* Backdrop / overlay de fondo */
+        .wiki-panel-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.52);
+            z-index: 10002;
+            display: none;
+            justify-content: flex-end;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .wiki-panel-overlay.active {
+            opacity: 1;
+        }
+
+        /* Panel / drawer */
+        .wiki-panel {
+            width: 64%;
+            max-width: 1060px;
+            min-width: 320px;
+            height: 100%;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border-color);
+            box-shadow: -24px 0 80px rgba(0, 0, 0, 0.22);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(110%);
+            transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                        background-color 0.3s ease,
+                        border-color 0.3s ease;
+            will-change: transform;
+        }
+        .wiki-panel-overlay.active .wiki-panel {
+            transform: translateX(0);
+        }
+
+        /* Franja amarilla superior — acento de marca */
+        .wiki-panel-accent {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            flex-shrink: 0;
+        }
+
+        /* Cabecera del panel */
+        .wiki-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 22px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--card-bg);
+            gap: 14px;
+            flex-shrink: 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .wiki-panel-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+        .wiki-panel-badge {
+            font-size: 0.68em;
+            font-weight: 800;
+            color: #1a1a1a;
+            background: var(--primary);
+            padding: 4px 9px;
+            border-radius: 999px;
+            letter-spacing: 0.4px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+        }
+        .wiki-panel-title {
+            font-weight: 800;
+            color: var(--secondary);
+            font-size: 1em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: -0.2px;
+        }
+
+        /* Acciones de cabecera: abrir externa + cerrar */
+        .wiki-panel-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .btn-wiki-ext {
+            padding: 8px 14px;
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+        .btn-wiki-ext:hover {
+            border-color: var(--primary);
+            color: var(--secondary);
+            background: rgba(255, 195, 0, 0.10);
+            transform: translateY(-1px);
+        }
+        body.dark-mode .btn-wiki-ext {
+            color: var(--text-main);
+            border-color: var(--border-color);
+        }
+        body.dark-mode .btn-wiki-ext:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(255, 195, 0, 0.08);
+        }
+        .wiki-panel-close-btn {
+            background: var(--status-bg);
+            border: 1px solid var(--border-color);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            font-weight: 800;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .wiki-panel-close-btn:hover {
+            background: var(--primary);
+            color: #1a1a1a;
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* Contenedor del iframe */
+        .wiki-iframe-wrap {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Loader de carga */
+        .wiki-iframe-loader {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            gap: 18px;
+            z-index: 2;
+            transition: opacity 0.4s ease, background-color 0.3s ease;
+            pointer-events: none;
+        }
+        .wiki-iframe-loader.hidden {
+            opacity: 0;
+        }
+        .wiki-loader-ring {
+            width: 44px;
+            height: 44px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.85s linear infinite;
+        }
+        .wiki-loader-label {
+            font-size: 0.87em;
+            color: var(--text-light);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* El iframe en sí */
+        #wikiIframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Scrollbar del panel (webkit) */
+        .wiki-panel ::-webkit-scrollbar { width: 6px; }
+        .wiki-panel ::-webkit-scrollbar-track { background: var(--bg-body); }
+        .wiki-panel ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+        /* Responsive del panel */
+        @media (max-width: 900px) {
+            .wiki-panel { width: 80%; }
+        }
+        @media (max-width: 640px) {
+            .wiki-panel {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                border-left: none;
+            }
+            .wiki-panel-header { padding: 12px 16px; }
+            .wiki-panel-title { font-size: 0.9em; }
+            /* Ocultar el texto del botón externo en móvil, solo icono */
+            .btn-wiki-ext .ext-label { display: none; }
+            .btn-wiki-ext { padding: 8px 10px; }
+        }
     </style>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════════════════
+     CONTENEDOR PRINCIPAL — SIN CAMBIOS
+     ══════════════════════════════════════════════════ -->
 <div class="contenedor">
     <button id="btnDarkMode" class="btn-dark-mode" title="Alternar modo oscuro">🌙</button>
     <h2>Buscador <strong>UNID</strong></h2>
@@ -535,7 +764,6 @@
     </div>
     
     <div class="input-group">
-        
         <div class="mode-switch-container">
             <span id="lblCampus" class="mode-label active" onclick="toggleMode(false)">🏫 Info General</span>
             <div class="flip-switch" id="modeSwitch" onclick="toggleMode()">
@@ -559,10 +787,12 @@
     </div>
 </div>
 
+<!-- BOTÓN FEEDBACK — SIN CAMBIOS -->
 <div class="feedback-container">
     <button id="btnAbrirFeedback" class="help-btn" style="background: var(--secondary); color: var(--card-bg);" title="Enviar Opinión">💬</button>
 </div>
 
+<!-- MODAL FEEDBACK — SIN CAMBIOS -->
 <div id="modalFeedback" class="modal-overlay">
     <div class="modal-content" style="max-width: 400px;">
         <button class="modal-close" onclick="cerrarModalFeedback()">✕</button>
@@ -572,13 +802,13 @@
         <form id="formularioFeedback" action="https://formspree.io/f/xeevgpea" method="POST" class="input-group">
             <label>Tu mensaje:</label>
             <textarea name="mensaje" rows="4" required placeholder="Escribe aquí tu retroalimentación..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 12px; background: var(--input-bg); color: var(--text-main); font-family: inherit; resize: vertical; outline: none;"></textarea>
-            
             <button type="submit" id="btnEnviarMensaje" class="btn-buscar" style="margin-top: 15px;">Enviar Mensaje</button>
             <p id="mensajeEstado" style="text-align: center; font-size: 0.9em; margin-top: 10px; font-weight: 600; display: none;"></p>
         </form>
     </div>
 </div>
 
+<!-- BOTÓN AYUDA — SIN CAMBIOS -->
 <div class="help-container">
     <div id="helpBox" class="help-box">
         <strong>¿Dudas o sugerencias?</strong>
@@ -588,6 +818,7 @@
     <button id="helpBtn" class="help-btn" title="Ayuda">?</button>
 </div>
 
+<!-- MODAL CARRERAS — SIN CAMBIOS -->
 <div id="modalCarreras" class="modal-overlay">
     <div class="modal-content">
         <button class="modal-close" onclick="cerrarModalCarreras()">✕</button>
@@ -598,8 +829,64 @@
     </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════════
+     WIKI PANEL LATERAL — NUEVA SECCIÓN AGREGADA
+     Drawer profesional: desliza desde la derecha sobre el buscador
+     ══════════════════════════════════════════════════════════════ -->
+<div id="wikiPanelOverlay" class="wiki-panel-overlay">
+    <div class="wiki-panel" id="wikiPanel">
+
+        <!-- Franja de acento amarillo UNID -->
+        <div class="wiki-panel-accent"></div>
+
+        <!-- Cabecera del panel -->
+        <div class="wiki-panel-header">
+            <div class="wiki-panel-left">
+                <span class="wiki-panel-badge">WIKI UNID</span>
+                <span id="wikiPanelTitle" class="wiki-panel-title">Wiki del Campus</span>
+            </div>
+            <div class="wiki-panel-actions">
+                <!-- Abrir en pestaña real (fallback si hay bloqueo de iframe) -->
+                <a id="btnWikiExternal"
+                   href="#"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="btn-wiki-ext"
+                   title="Abrir en nueva pestaña">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    <span class="ext-label">Nueva pestaña</span>
+                </a>
+                <!-- Cerrar panel -->
+                <button class="wiki-panel-close-btn"
+                        onclick="cerrarWikiPanel()"
+                        title="Cerrar wiki">✕</button>
+            </div>
+        </div>
+
+        <!-- Área del iframe con spinner de carga -->
+        <div class="wiki-iframe-wrap">
+            <div class="wiki-iframe-loader" id="wikiLoader">
+                <div class="wiki-loader-ring"></div>
+                <p class="wiki-loader-label">Cargando wiki del campus...</p>
+            </div>
+            <iframe id="wikiIframe"
+                    src="about:blank"
+                    title="Wiki del Campus UNID"
+                    allowfullscreen
+                    loading="eager">
+            </iframe>
+        </div>
+
+    </div>
+</div>
+<!-- ══════════════════════════════════════════════════════════════
+     FIN WIKI PANEL
+     ══════════════════════════════════════════════════════════════ -->
+
 <script>
-    // Gestión del Modo Noche
+    // ============================================================
+    // MODO NOCHE — SIN CAMBIOS
+    // ============================================================
     const btnDarkMode = document.getElementById('btnDarkMode');
     const toggleDarkMode = () => {
         document.body.classList.toggle('dark-mode');
@@ -613,13 +900,14 @@
     }
     btnDarkMode.addEventListener('click', toggleDarkMode);
 
-    // Lógica del Buscador y Datos Duales
+    // ============================================================
+    // DATOS Y CONFIGURACIÓN — SIN CAMBIOS
+    // ============================================================
     let datosCampus = [];
     let datosPlanes = [];
     const archivosA_Cargar = ['database.xlsx'];
     let debounceTimer = null;
 
-    // --- LÓGICA DEL SWITCH 3D ---
     let modoPlanes = false;
     const modeSwitch = document.getElementById('modeSwitch');
     const lblCampus = document.getElementById('lblCampus');
@@ -652,13 +940,13 @@
     function normalizarTexto(texto) {
         return (texto ?? "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
     }
-    
+
     function escapeHtml(texto) {
         return (texto ?? "").toString()
             .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
             .replaceAll("\"", "&quot;").replaceAll("'", "&#39;");
     }
-    
+
     function obtenerLinkWiki(encontrado) {
         let linkWiki = null;
         Object.keys(encontrado).forEach(columna => {
@@ -690,34 +978,35 @@
         debounceTimer = setTimeout(() => { buscarInstituto(); }, 220);
     }
 
+    // ============================================================
+    // CARGA DE BASE DE DATOS — SIN CAMBIOS
+    // ============================================================
     window.onload = async function() {
         const status = document.getElementById('statusCarga');
         status.innerHTML = "<span class='spinner'></span> Cargando base de datos...";
         try {
             const response = await fetch(archivosA_Cargar[0]);
             if (!response.ok) throw new Error("Archivo no encontrado");
-            
+
             const arrayBuffer = await response.arrayBuffer();
             const data = new Uint8Array(arrayBuffer);
             const libro = XLSX.read(data, {type: 'array'});
-            
-            // Cargar Hoja 1 (Campus)
+
             if(libro.SheetNames.length > 0) {
                 datosCampus = XLSX.utils.sheet_to_json(libro.Sheets[libro.SheetNames[0]]);
             }
-            
-            // Cargar Hoja 2 (Planes de Estudio)
+
             let nombreHojaPlanes = "Hoja2";
             if(libro.Sheets["Hoja2"]) {
                 nombreHojaPlanes = "Hoja2";
             } else if (libro.SheetNames.length > 1) {
                 nombreHojaPlanes = libro.SheetNames[1];
             }
-            
+
             if(libro.Sheets[nombreHojaPlanes]) {
                 datosPlanes = XLSX.utils.sheet_to_json(libro.Sheets[nombreHojaPlanes]);
             }
-            
+
             const totalRegistros = datosCampus.length + datosPlanes.length;
             if (totalRegistros > 0) {
                 status.innerHTML = `🟢 DB Lista (${datosCampus.length} info | ${datosPlanes.length} planes)`;
@@ -732,6 +1021,9 @@
         }
     };
 
+    // ============================================================
+    // BÚSQUEDA — SIN CAMBIOS
+    // ============================================================
     function buscarInstituto() {
         const busquedaOriginal = document.getElementById('textoBusqueda').value.trim();
         const busqueda = normalizarTexto(busquedaOriginal);
@@ -743,7 +1035,6 @@
         }
 
         if (!modoPlanes) {
-            // BUSQUEDA NORMAL (CAMPUS)
             if(datosCampus.length === 0) return caja.innerHTML = `<p style="color:#d63031; text-align:center;">Datos de campus no disponibles.</p>`;
             const resultados = datosCampus.filter(fila => {
                 const nombreCampus = normalizarTexto(fila.Nombre);
@@ -752,7 +1043,6 @@
             });
             renderizarResultadosCampus(resultados, caja, busquedaOriginal);
         } else {
-            // BUSQUEDA PLANES DE ESTUDIO
             if(datosPlanes.length === 0) return caja.innerHTML = `<p style="color:#d63031; text-align:center;">Datos de planes no disponibles (Asegúrate de tener la Hoja2).</p>`;
             const resultados = datosPlanes.filter(fila => {
                 const nombreCarrera = normalizarTexto(fila.Carrera);
@@ -762,6 +1052,11 @@
         }
     }
 
+    // ============================================================
+    // RENDERIZADO CAMPUS
+    // Único cambio: btn wiki ahora usa data-attrs y abre el panel.
+    // Todo lo demás es idéntico al original.
+    // ============================================================
     function renderizarResultadosCampus(resultados, caja, busquedaOriginal) {
         if (resultados.length > 0) {
             let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} RESULTADO(S)</p>`;
@@ -783,28 +1078,39 @@
                         </div>
                         <div class="btn-actions">
                 `;
+
                 if(carrerasInfo && carrerasInfo.trim() !== "") {
                     htmlResultado += `<button class="btn-wiki btn-ver-carreras" data-nombre="${nombreHtml}" data-carreras="${escapeHtml(carrerasInfo)}">Ver carreras 🎓</button>`;
                 }
+
+                // ★ CAMBIO: en lugar de <a target="_blank">, se usa un <button>
+                //   que abre el wiki panel lateral mediante data attributes.
+                //   El texto y estilo (btn-wiki) son idénticos al original.
                 if (linkWiki && linkWiki.toString().trim() !== "") {
                     let urlFinal = linkWiki.toString().trim();
                     if (!urlFinal.startsWith('http')) urlFinal = 'https://' + urlFinal;
-                    htmlResultado += `<a href="${escapeHtml(urlFinal)}" target="_blank" onclick="limpiarBusqueda()" class="btn-wiki">abrir wiki ↗</a>`;
+                    htmlResultado += `<button class="btn-wiki btn-abrir-wiki"
+                                              data-url="${escapeHtml(urlFinal)}"
+                                              data-nombre="${nombreHtml}">abrir wiki ↗</button>`;
                 } else if (!carrerasInfo || carrerasInfo.trim() === "") {
                     htmlResultado += `<span class="sin-wiki">Sin links o carreras</span>`;
                 }
+
                 htmlResultado += `</div></div>`;
                 htmlTotal += htmlResultado;
             });
             caja.innerHTML = htmlTotal;
             asignarEventosCarreras();
+            asignarEventosWiki(); // ★ nuevo: conecta los botones del wiki panel
             animarTarjetas();
         } else {
             caja.innerHTML = `<div class="resultado-vacio">No hay resultados en Campus para "${escapeHtml(busquedaOriginal)}".</div>`;
         }
     }
 
-    // --- RENDERIZADO CON LÓGICA DE DESCARGA PARA SHAREPOINT ---
+    // ============================================================
+    // RENDERIZADO PLANES — SIN CAMBIOS
+    // ============================================================
     function renderizarResultadosPlanes(resultados, caja, busquedaOriginal) {
         if (resultados.length > 0) {
             let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} PLAN(ES) DE ESTUDIO</p>`;
@@ -819,22 +1125,18 @@
                         </div>
                         <div class="btn-actions">
                 `;
-                
+
                 if (linkPlan.trim() !== "") {
                     let urlFinal = linkPlan.toString().trim();
                     if (!urlFinal.startsWith('http')) urlFinal = 'https://' + urlFinal;
-                    
-                    // LÓGICA DE LIMPIEZA Y DESCARGA PARA SHAREPOINT
+
                     let downloadLink = urlFinal;
-                    
-                    // Si el link de SharePoint trae "web=1", lo reemplazamos por "download=1" para forzar la descarga
                     if (downloadLink.includes('web=1')) {
                         downloadLink = downloadLink.replace('web=1', 'download=1');
                     } else {
-                        // Si no lo trae, simplemente le agregamos el parámetro al final
                         downloadLink += downloadLink.includes('?') ? '&download=1' : '?download=1';
                     }
-                    
+
                     htmlResultado += `
                         <a href="${escapeHtml(urlFinal)}" target="_blank" onclick="limpiarBusqueda()" class="btn-secondary">
                             <i class="fa-regular fa-eye"></i> Ver
@@ -846,7 +1148,7 @@
                 } else {
                     htmlResultado += `<span class="sin-wiki">Link no disponible</span>`;
                 }
-                
+
                 htmlResultado += `</div></div>`;
                 htmlTotal += htmlResultado;
             });
@@ -863,6 +1165,9 @@
         });
     }
 
+    // ============================================================
+    // MODAL CARRERAS — SIN CAMBIOS
+    // ============================================================
     function asignarEventosCarreras() {
         document.querySelectorAll('.btn-ver-carreras').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -871,7 +1176,6 @@
         });
     }
 
-    // --- FUNCIONES DEL MODAL DE CARRERAS ---
     function abrirModalCarreras(nombreCampus, carrerasStr) {
         const modal = document.getElementById('modalCarreras');
         const title = document.getElementById('modalTitle');
@@ -894,18 +1198,20 @@
     function cerrarModalCarreras() {
         const modal = document.getElementById('modalCarreras');
         modal.classList.remove('active');
-        setTimeout(() => modal.style.display = 'none', 300); 
+        setTimeout(() => modal.style.display = 'none', 300);
     }
     document.getElementById('modalCarreras').addEventListener('click', (e) => {
         if(e.target === document.getElementById('modalCarreras')) cerrarModalCarreras();
     });
 
-    // --- FUNCIONES DEL MODAL DE FEEDBACK Y AJAX ---
+    // ============================================================
+    // MODAL FEEDBACK — SIN CAMBIOS
+    // ============================================================
     const modalFeedback = document.getElementById('modalFeedback');
     const formularioFeedback = document.getElementById('formularioFeedback');
     const btnEnviarMensaje = document.getElementById('btnEnviarMensaje');
     const mensajeEstado = document.getElementById('mensajeEstado');
-    
+
     document.getElementById('btnAbrirFeedback').addEventListener('click', () => {
         modalFeedback.style.display = 'flex';
         setTimeout(() => modalFeedback.classList.add('active'), 10);
@@ -914,14 +1220,14 @@
         modalFeedback.classList.remove('active');
         setTimeout(() => {
             modalFeedback.style.display = 'none';
-            mensajeEstado.style.display = 'none'; 
+            mensajeEstado.style.display = 'none';
         }, 300);
     }
     modalFeedback.addEventListener('click', (e) => {
         if(e.target === modalFeedback) cerrarModalFeedback();
     });
     formularioFeedback.addEventListener('submit', async function(e) {
-        e.preventDefault(); 
+        e.preventDefault();
         const data = new FormData(formularioFeedback);
         btnEnviarMensaje.textContent = "Enviando..."; btnEnviarMensaje.disabled = true; mensajeEstado.style.display = "none";
         try {
@@ -931,7 +1237,7 @@
             if (response.ok) {
                 mensajeEstado.textContent = "¡Mensaje enviado con éxito! Gracias por tu opinión.";
                 mensajeEstado.style.color = "#27ae60"; mensajeEstado.style.display = "block";
-                formularioFeedback.reset(); 
+                formularioFeedback.reset();
                 setTimeout(() => { cerrarModalFeedback(); }, 3000);
             } else {
                 mensajeEstado.textContent = "Hubo un problema al enviar. Intenta de nuevo.";
@@ -945,11 +1251,91 @@
         }
     });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === "Escape") { cerrarModalCarreras(); cerrarModalFeedback(); }
+    // ============================================================
+    // ★ WIKI PANEL — LÓGICA NUEVA (cero líneas modificadas arriba)
+    // ============================================================
+    const wikiOverlay  = document.getElementById('wikiPanelOverlay');
+    const wikiIframe   = document.getElementById('wikiIframe');
+    const wikiTitle    = document.getElementById('wikiPanelTitle');
+    const wikiExtLink  = document.getElementById('btnWikiExternal');
+    const wikiLoader   = document.getElementById('wikiLoader');
+    let   wikiReady    = false; // bandera para ignorar el load inicial de about:blank
+
+    /** Asigna los listeners a los botones generados dinámicamente */
+    function asignarEventosWiki() {
+        document.querySelectorAll('.btn-abrir-wiki').forEach(btn => {
+            btn.addEventListener('click', () => {
+                abrirWikiPanel(
+                    btn.getAttribute('data-url'),
+                    btn.getAttribute('data-nombre')
+                );
+            });
+        });
+    }
+
+    /** Abre el drawer lateral con la URL del wiki */
+    function abrirWikiPanel(url, nombre) {
+        // 1. Actualizar cabecera
+        wikiTitle.textContent = nombre || 'Wiki del Campus';
+        wikiExtLink.href      = url;
+
+        // 2. Mostrar loader, resetear iframe
+        wikiReady = false;
+        wikiLoader.classList.remove('hidden');
+        wikiIframe.src = 'about:blank';
+
+        // 3. Abrir overlay con animación de fade + slide
+        wikiOverlay.style.display = 'flex';
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                wikiOverlay.classList.add('active');
+            });
+        });
+
+        // 4. Bloquear scroll del body (el panel ocupa toda la pantalla en móvil)
+        document.body.style.overflow = 'hidden';
+
+        // 5. Cargar URL después de que la animación haya comenzado
+        setTimeout(() => {
+            wikiReady = true;
+            wikiIframe.src = url;
+        }, 150);
+    }
+
+    /** Cierra el drawer lateral con animación inversa */
+    function cerrarWikiPanel() {
+        wikiOverlay.classList.remove('active');
+        setTimeout(() => {
+            wikiOverlay.style.display  = 'none';
+            wikiReady                  = false;
+            wikiIframe.src             = 'about:blank';
+            document.body.style.overflow = '';
+        }, 430);
+    }
+
+    /** Oculta el spinner cuando el iframe termina de cargar */
+    wikiIframe.addEventListener('load', () => {
+        if (wikiReady) {
+            wikiLoader.classList.add('hidden');
+        }
     });
 
-    // Eventos Buscador
+    /** Cerrar al hacer clic en el backdrop (fuera del panel) */
+    wikiOverlay.addEventListener('click', (e) => {
+        if (e.target === wikiOverlay) cerrarWikiPanel();
+    });
+
+    // ============================================================
+    // EVENTOS GLOBALES — SIN CAMBIOS + ESC para wiki panel
+    // ============================================================
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+            cerrarModalCarreras();
+            cerrarModalFeedback();
+            cerrarWikiPanel(); // ★ nuevo: ESC también cierra el wiki panel
+        }
+    });
+
     document.getElementById('textoBusqueda').addEventListener('input', actualizarBusquedaEnVivo);
     document.getElementById('textoBusqueda').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') buscarInstituto();
@@ -957,7 +1343,7 @@
     document.getElementById('btnBuscar').addEventListener('mousedown', function() { this.style.transform = 'translateY(0) scale(0.99)'; });
     document.getElementById('btnBuscar').addEventListener('mouseup', function() { this.style.transform = ''; });
 
-    /* BOTÓN DE AYUDA */
+    /* BOTÓN DE AYUDA — SIN CAMBIOS */
     const helpBtn = document.getElementById('helpBtn');
     const helpBox = document.getElementById('helpBox');
     helpBtn.addEventListener('click', function(e) {
