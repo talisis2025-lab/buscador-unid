@@ -5,810 +5,787 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscador Interno | UNID</title>
     <link rel="icon" type="image/jpeg" href="https://blog-unid.talisis.com/hubfs/assets-landings/img/256x256bb.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome (buscador) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tabler Icons (wiki) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
     <style>
-        /* ============================================================
-           DISEÑO ORIGINAL — SIN CAMBIOS (ni una línea modificada)
-           ============================================================ */
-        :root {
-            --primary: #FFC300;
-            --primary-dark: #e6b000;
-            --secondary: #1a1a1a;
-            --bg-body: #f4f7f9;
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-light: #636e72;
-            --border-color: #edf2f7;
-            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.10), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --input-bg: #fafafa;
-            --status-bg: #f8fafc;
-        }
-        /* Variables Modo Noche */
-        body.dark-mode {
-            --secondary: #f8f9fa;
-            --bg-body: #121212;
-            --card-bg: #1e1e1e;
-            --text-main: #e2e8f0;
-            --text-light: #a0aec0;
-            --border-color: #333333;
-            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-            --input-bg: #2d3748;
-            --status-bg: #2d3748;
-        }
-        * {
-            box-sizing: border-box;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(255, 195, 0, 0.14), transparent 35%),
-                radial-gradient(circle at bottom right, rgba(26, 26, 26, 0.05), transparent 28%),
-                var(--bg-body);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .contenedor {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 600px;
-            margin-top: 40px;
-            position: relative;
-            border: 1px solid var(--border-color);
-            animation: fadeInUp 0.6s ease both;
-            overflow: visible;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .btn-dark-mode {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            background: var(--bg-body);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            color: var(--text-main);
-            z-index: 10;
-        }
-        .btn-dark-mode:hover {
-            transform: scale(1.05);
-            border-color: var(--primary);
-        }
-        h2 {
-            text-align: center;
-            margin: 0 0 34px 0;
-            font-weight: 300;
-            font-size: 2.2em;
-            letter-spacing: -1px;
-            position: relative;
-            animation: fadeInDown 0.55s ease both;
-        }
-        h2 strong {
-            color: var(--secondary);
-            font-weight: 800;
-            border-bottom: 4px solid var(--primary);
-        }
-        .status-box {
-            background: var(--status-bg);
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
-        }
-        .status-box:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 18px rgba(0,0,0,0.04);
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 700;
-            color: var(--secondary);
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .input-group {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        /* --- SWITCH 3D GIRATORIO --- */
-        .mode-switch-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 10px;
-            padding: 12px;
-            background: var(--status-bg);
-            border-radius: 18px;
-            border: 1px solid var(--border-color);
-        }
-        .mode-label {
-            font-weight: 700;
-            font-size: 0.9em;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: all 0.3s ease;
-            user-select: none;
-        }
-        .mode-label.active {
-            color: var(--secondary);
-            font-weight: 800;
-            transform: scale(1.05);
-        }
-        body.dark-mode .mode-label.active { color: var(--primary); }
+    /* ════════════════════════════════════════════════════════════════
+       VARIABLES — Sistema de Diseño UNID
+       ════════════════════════════════════════════════════════════════ */
+    :root {
+        --primary:      #FFC300;
+        --primary-dark: #e6b000;
+        --secondary:    #1a1a1a;
+        --bg-body:      #f4f7f9;
+        --card-bg:      #ffffff;
+        --text-main:    #2d3436;
+        --text-light:   #636e72;
+        --border-color: #edf2f7;
+        --shadow:       0 20px 25px -5px rgba(0,0,0,.10), 0 10px 10px -5px rgba(0,0,0,.04);
+        --input-bg:     #fafafa;
+        --status-bg:    #f8fafc;
+        --nav-h:        52px;
+    }
+    body.dark-mode {
+        --secondary:    #f8f9fa;
+        --bg-body:      #121212;
+        --card-bg:      #1e1e1e;
+        --text-main:    #e2e8f0;
+        --text-light:   #a0aec0;
+        --border-color: #333333;
+        --shadow:       0 20px 25px -5px rgba(0,0,0,.5);
+        --input-bg:     #2d3748;
+        --status-bg:    #2d3748;
+    }
 
-        .flip-switch {
-            position: relative;
-            width: 52px;
-            height: 52px;
-            perspective: 1000px;
-            cursor: pointer;
-        }
-        .flip-switch-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .flip-switch.active .flip-switch-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-front, .flip-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        }
-        .flip-front { background: var(--secondary); color: var(--card-bg); }
-        .flip-back { background: var(--primary); color: #1a1a1a; transform: rotateY(180deg); }
-        body.dark-mode .flip-front { background: var(--primary); color: #1a1a1a; }
+    /* ════════════════════════════════════════════════════════════════
+       BASE
+       ════════════════════════════════════════════════════════════════ */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-        .search-wrap {
-            position: relative;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid var(--border-color);
-            border-radius: 14px;
-            outline: none;
-            font-size: 1.05em;
-            transition: all 0.22s ease;
-            box-sizing: border-box;
-            background: var(--input-bg);
-            color: var(--text-main);
-            box-shadow: 0 0 0 rgba(255, 195, 0, 0);
-        }
-        input[type="text"]:focus {
-            border-color: var(--primary);
-            background: var(--card-bg);
-            box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12);
-            transform: translateY(-1px);
-        }
-        textarea:focus, input[type="email"]:focus {
-            border-color: var(--primary) !important;
-            background: var(--card-bg) !important;
-            box-shadow: 0 0 0 4px rgba(255, 195, 0, 0.12);
-            transform: translateY(-1px);
-            transition: all 0.22s ease;
-        }
-        input[type="text"]::placeholder {
-            color: var(--text-light);
-        }
-        .btn-buscar {
-            padding: 16px;
-            background-color: var(--secondary);
-            color: var(--card-bg);
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            font-weight: 800;
-            font-size: 1em;
-            transition: transform 0.18s ease, box-shadow 0.22s ease, background-color 0.22s ease;
-            will-change: transform;
-        }
-        body.dark-mode .btn-buscar {
-            background-color: var(--primary);
-            color: #121212;
-        }
-        .btn-buscar:hover {
-            background-color: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10);
-        }
-        body.dark-mode .btn-buscar:hover {
-            background-color: var(--primary-dark);
-        }
-        .btn-buscar:active {
-            transform: translateY(0) scale(0.99);
-        }
+    body {
+        font-family: 'Inter', sans-serif;
+        background:
+            radial-gradient(circle at top left,  rgba(255,195,0,.14), transparent 35%),
+            radial-gradient(circle at bottom right, rgba(26,26,26,.05), transparent 28%),
+            var(--bg-body);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        transition: background-color .3s ease, color .3s ease;
+    }
 
-        #resultado {
-            margin-top: 36px;
-            display: grid;
-            gap: 14px;
-        }
-        .result-card {
-            background: var(--card-bg);
-            padding: 24px;
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 14px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            animation: slideUp 0.42s ease forwards;
-            opacity: 0;
-            flex-wrap: wrap;
-        }
-        .result-card.show { opacity: 1; }
-        .result-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-        }
-        .instituto-info {
-            flex: 1 1 auto;
-            min-width: 0;
-        }
-        .instituto-nombre {
-            font-size: 1.08em;
-            font-weight: 800;
-            color: var(--secondary);
-            margin-bottom: 6px;
-            line-height: 1.25;
-        }
-        .meta-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 6px;
-        }
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 0.78em;
-            font-weight: 700;
-            background: var(--status-bg);
-            color: var(--text-light);
-        }
-        .btn-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .btn-wiki {
-            padding: 10px 18px;
-            background-color: var(--primary);
-            color: #1a1a1a;
-            text-decoration: none;
-            border: none;
-            border-radius: 10px;
-            font-weight: 800;
-            font-family: inherit;
-            font-size: 0.85em;
-            cursor: pointer;
-            display: inline-block;
-            transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
-            white-space: nowrap;
-            box-shadow: 0 8px 16px rgba(255, 195, 0, 0.20);
-        }
-        .btn-wiki:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 18px rgba(255, 195, 0, 0.26);
-        }
-        .btn-wiki:active {
-            transform: translateY(0) scale(0.99);
-        }
+    /* ════════════════════════════════════════════════════════════════
+       NAV BAR — Barra de navegación profesional
+       ════════════════════════════════════════════════════════════════ */
+    .app-nav {
+        position: sticky;
+        top: 0;
+        z-index: 9997;
+        height: var(--nav-h);
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border-color);
+        padding: 0 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        box-shadow: 0 1px 10px rgba(0,0,0,.06);
+        transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease;
+    }
+    .app-nav-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .app-brand-badge {
+        background: var(--secondary);
+        color: var(--card-bg);
+        font-size: 11px;
+        font-weight: 800;
+        padding: 5px 11px;
+        border-radius: 7px;
+        letter-spacing: 1.2px;
+        transition: background-color .3s ease, color .3s ease;
+    }
+    .app-brand-sep {
+        width: 1px;
+        height: 22px;
+        background: var(--border-color);
+        flex-shrink: 0;
+    }
+    .app-brand-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-light);
+        letter-spacing: .1px;
+        white-space: nowrap;
+    }
+    .app-nav-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .nav-pill {
+        padding: 7px 14px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        transition: all .18s ease;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+    .nav-pill.active {
+        background: var(--secondary);
+        color: var(--card-bg);
+        border: 1px solid transparent;
+    }
+    .nav-pill:not(.active) {
+        background: transparent;
+        color: var(--text-light);
+        border: 1px solid var(--border-color);
+    }
+    .nav-pill:not(.active):hover {
+        border-color: var(--primary);
+        color: var(--secondary);
+        background: rgba(255,195,0,.06);
+    }
+    body.dark-mode .nav-pill.active {
+        background: var(--primary);
+        color: #121212;
+    }
+    body.dark-mode .nav-pill:not(.active):hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(255,195,0,.08);
+    }
+    .nav-divider {
+        width: 1px;
+        height: 22px;
+        background: var(--border-color);
+        margin: 0 4px;
+        flex-shrink: 0;
+    }
+    .btn-dark-mode-nav {
+        background: var(--status-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        font-size: 1em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-main);
+        transition: all .2s ease;
+    }
+    .btn-dark-mode-nav:hover {
+        border-color: var(--primary);
+        transform: scale(1.05);
+    }
 
-        /* ESTILO PARA EL BOTÓN SECUNDARIO (Ver) */
-        .btn-secondary {
-            padding: 8px 16px;
-            background-color: transparent;
-            color: var(--secondary);
-            border: 2px solid var(--secondary);
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 800;
-            font-family: inherit;
-            font-size: 0.85em;
-            cursor: pointer;
-            display: inline-block;
-            transition: all 0.18s ease;
-            white-space: nowrap;
-        }
-        .btn-secondary:hover {
-            background-color: var(--secondary);
-            color: var(--card-bg);
-        }
-        body.dark-mode .btn-secondary {
-            color: var(--text-main);
-            border-color: var(--text-main);
-        }
-        body.dark-mode .btn-secondary:hover {
-            background-color: var(--text-main);
-            color: var(--bg-body);
-        }
+    /* ════════════════════════════════════════════════════════════════
+       CONTENIDO PRINCIPAL
+       ════════════════════════════════════════════════════════════════ */
+    .page-body {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: calc(100vh - var(--nav-h));
+    }
 
-        .status-text { color: var(--text-light); font-size: 0.85em; font-weight: 600; }
-        .sin-wiki { color: var(--text-light); font-size: 0.85em; font-style: italic; }
-        .search-hint {
-            font-size: 0.82em;
-            color: var(--text-light);
-            margin-top: -6px;
-            animation: fadeIn 0.35s ease both;
-        }
-        .resultado-vacio {
-            text-align:center;
-            padding: 30px;
-            background: var(--status-bg);
-            border-radius: 18px;
-            color: #e74c3c;
-            border: 1px solid var(--border-color);
-            animation: fadeIn 0.35s ease both;
-        }
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(0,0,0,0.12);
-            border-top-color: var(--secondary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        body.dark-mode .spinner {
-            border: 2px solid rgba(255,255,255,0.12);
-            border-top-color: var(--primary);
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .results-count {
-            margin: 0 0 10px 0;
-            color: var(--text-light);
-            font-size: 0.82em;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
+    /* ════════════════════════════════════════════════════════════════
+       BUSCADOR — Diseño original (sin cambios)
+       ════════════════════════════════════════════════════════════════ */
+    .contenedor {
+        background: var(--card-bg);
+        padding: 40px;
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 600px;
+        margin-top: 40px;
+        position: relative;
+        border: 1px solid var(--border-color);
+        animation: fadeInUp .6s ease both;
+        overflow: visible;
+        transition: background-color .3s ease, border-color .3s ease;
+    }
+    h2 {
+        text-align: center;
+        margin: 0 0 34px 0;
+        font-weight: 300;
+        font-size: 2.2em;
+        letter-spacing: -1px;
+        position: relative;
+        animation: fadeInDown .55s ease both;
+    }
+    h2 strong { color: var(--secondary); font-weight: 800; border-bottom: 4px solid var(--primary); }
+    .status-box {
+        background: var(--status-bg);
+        padding: 12px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        transition: transform .2s ease, box-shadow .2s ease, background-color .3s ease;
+    }
+    .status-box:hover { transform: translateY(-1px); box-shadow: 0 10px 18px rgba(0,0,0,.04); }
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: var(--secondary);
+        font-size: .9em;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+    }
+    .input-group { position: relative; display: flex; flex-direction: column; gap: 15px; }
+    .mode-switch-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 10px;
+        padding: 12px;
+        background: var(--status-bg);
+        border-radius: 18px;
+        border: 1px solid var(--border-color);
+    }
+    .mode-label { font-weight: 700; font-size: .9em; cursor: pointer; color: var(--text-light); transition: all .3s ease; user-select: none; }
+    .mode-label.active { color: var(--secondary); font-weight: 800; transform: scale(1.05); }
+    body.dark-mode .mode-label.active { color: var(--primary); }
+    .flip-switch { position: relative; width: 52px; height: 52px; perspective: 1000px; cursor: pointer; }
+    .flip-switch-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform .6s cubic-bezier(.4,0,.2,1); transform-style: preserve-3d; }
+    .flip-switch.active .flip-switch-inner { transform: rotateY(180deg); }
+    .flip-front, .flip-back {
+        position: absolute; width: 100%; height: 100%;
+        backface-visibility: hidden;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; font-size: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,.08);
+    }
+    .flip-front { background: var(--secondary); color: var(--card-bg); }
+    .flip-back  { background: var(--primary);   color: #1a1a1a; transform: rotateY(180deg); }
+    body.dark-mode .flip-front { background: var(--primary); color: #1a1a1a; }
+    .search-wrap { position: relative; }
+    input[type="text"] {
+        width: 100%; padding: 16px 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 14px; outline: none;
+        font-size: 1.05em; transition: all .22s ease;
+        background: var(--input-bg); color: var(--text-main);
+    }
+    input[type="text"]:focus {
+        border-color: var(--primary); background: var(--card-bg);
+        box-shadow: 0 0 0 4px rgba(255,195,0,.12); transform: translateY(-1px);
+    }
+    textarea:focus, input[type="email"]:focus {
+        border-color: var(--primary) !important; background: var(--card-bg) !important;
+        box-shadow: 0 0 0 4px rgba(255,195,0,.12); transform: translateY(-1px); transition: all .22s ease;
+    }
+    input[type="text"]::placeholder { color: var(--text-light); }
+    .btn-buscar {
+        padding: 16px; background-color: var(--secondary); color: var(--card-bg);
+        border: none; border-radius: 14px; cursor: pointer;
+        font-weight: 800; font-size: 1em; font-family: inherit;
+        transition: transform .18s ease, box-shadow .22s ease, background-color .22s ease;
+        will-change: transform;
+    }
+    body.dark-mode .btn-buscar { background-color: var(--primary); color: #121212; }
+    .btn-buscar:hover { background-color: #333; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,.10); }
+    body.dark-mode .btn-buscar:hover { background-color: var(--primary-dark); }
+    .btn-buscar:active { transform: translateY(0) scale(.99); }
+    #resultado { margin-top: 36px; display: grid; gap: 14px; }
+    .result-card {
+        background: var(--card-bg); padding: 24px;
+        border: 1px solid var(--border-color); border-radius: 18px;
+        display: flex; justify-content: space-between; align-items: center;
+        gap: 14px; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        animation: slideUp .42s ease forwards; opacity: 0; flex-wrap: wrap;
+    }
+    .result-card.show { opacity: 1; }
+    .result-card:hover { border-color: var(--primary); transform: translateY(-3px) scale(1.01); box-shadow: 0 12px 24px rgba(0,0,0,.08); }
+    .instituto-info { flex: 1 1 auto; min-width: 0; }
+    .instituto-nombre { font-size: 1.08em; font-weight: 800; color: var(--secondary); margin-bottom: 6px; line-height: 1.25; }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .pill {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 10px; border-radius: 999px;
+        font-size: .78em; font-weight: 700;
+        background: var(--status-bg); color: var(--text-light);
+    }
+    .btn-actions { display: flex; gap: 10px; align-items: center; }
+    .btn-wiki {
+        padding: 10px 18px; background-color: var(--primary); color: #1a1a1a;
+        text-decoration: none; border: none; border-radius: 10px;
+        font-weight: 800; font-family: inherit; font-size: .85em;
+        cursor: pointer; display: inline-block;
+        transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+        white-space: nowrap; box-shadow: 0 8px 16px rgba(255,195,0,.20);
+    }
+    .btn-wiki:hover { background-color: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 10px 18px rgba(255,195,0,.26); }
+    .btn-wiki:active { transform: translateY(0) scale(.99); }
+    .btn-secondary {
+        padding: 8px 16px; background-color: transparent;
+        color: var(--secondary); border: 2px solid var(--secondary);
+        text-decoration: none; border-radius: 10px;
+        font-weight: 800; font-family: inherit; font-size: .85em;
+        cursor: pointer; display: inline-block; transition: all .18s ease; white-space: nowrap;
+    }
+    .btn-secondary:hover { background-color: var(--secondary); color: var(--card-bg); }
+    body.dark-mode .btn-secondary { color: var(--text-main); border-color: var(--text-main); }
+    body.dark-mode .btn-secondary:hover { background-color: var(--text-main); color: var(--bg-body); }
+    .status-text { color: var(--text-light); font-size: .85em; font-weight: 600; }
+    .sin-wiki { color: var(--text-light); font-size: .85em; font-style: italic; }
+    .search-hint { font-size: .82em; color: var(--text-light); margin-top: -6px; animation: fadeIn .35s ease both; }
+    .resultado-vacio { text-align: center; padding: 30px; background: var(--status-bg); border-radius: 18px; color: #e74c3c; border: 1px solid var(--border-color); animation: fadeIn .35s ease both; }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(0,0,0,.12); border-top-color: var(--secondary); border-radius: 50%; animation: spin .8s linear infinite; }
+    body.dark-mode .spinner { border: 2px solid rgba(255,255,255,.12); border-top-color: var(--primary); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .results-count { margin: 0 0 10px 0; color: var(--text-light); font-size: .82em; font-weight: 700; letter-spacing: .3px; }
 
-        /* Modales */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            backdrop-filter: blur(4px);
-        }
-        .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-content {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            position: relative;
-            transform: translateY(20px);
-            transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .modal-overlay.active .modal-content { transform: translateY(0); }
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--status-bg);
-            border: 1px solid var(--border-color);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            cursor: pointer;
-            color: var(--text-main);
-            transition: all 0.2s;
-        }
-        .modal-close:hover {
-            background: var(--primary);
-            color: #1a1a1a;
-            border-color: var(--primary);
-        }
-        .modal-title {
-            margin-top: 0; font-weight: 800; color: var(--secondary); margin-bottom: 20px;
-            padding-right: 30px; font-size: 1.4em;
-        }
-        .carreras-container { overflow-y: auto; padding-right: 5px; }
-        .carreras-container::-webkit-scrollbar { width: 6px; }
-        .carreras-container::-webkit-scrollbar-track { background: var(--bg-body); border-radius: 4px; }
-        .carreras-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-        .carreras-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-        .carreras-list li {
-            background: var(--status-bg);
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 0.95em;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            font-weight: 600;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-        .carreras-list li:hover {
-            transform: translateX(4px);
-            border-color: var(--primary);
-        }
+    /* ════ Modales ════ */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,.5);
+        display: none; justify-content: center; align-items: center;
+        z-index: 10000; opacity: 0; transition: opacity .3s ease;
+        backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active { display: flex; opacity: 1; }
+    .modal-content {
+        background: var(--card-bg); padding: 30px;
+        border-radius: 20px; max-width: 500px; width: 90%; max-height: 80vh;
+        display: flex; flex-direction: column; box-shadow: var(--shadow);
+        border: 1px solid var(--border-color); position: relative;
+        transform: translateY(20px); transition: transform .3s ease, background-color .3s ease, border-color .3s ease;
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+    .modal-close {
+        position: absolute; top: 20px; right: 20px;
+        background: var(--status-bg); border: 1px solid var(--border-color);
+        width: 32px; height: 32px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2em; cursor: pointer; color: var(--text-main); transition: all .2s;
+    }
+    .modal-close:hover { background: var(--primary); color: #1a1a1a; border-color: var(--primary); }
+    .modal-title { margin-top: 0; font-weight: 800; color: var(--secondary); margin-bottom: 20px; padding-right: 30px; font-size: 1.4em; }
+    .carreras-container { overflow-y: auto; padding-right: 5px; }
+    .carreras-container::-webkit-scrollbar { width: 6px; }
+    .carreras-container::-webkit-scrollbar-track { background: var(--bg-body); border-radius: 4px; }
+    .carreras-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+    .carreras-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .carreras-list li {
+        background: var(--status-bg); padding: 12px 16px; border-radius: 12px;
+        font-size: .95em; color: var(--text-main); border: 1px solid var(--border-color);
+        font-weight: 600; transition: transform .2s ease, border-color .2s ease;
+    }
+    .carreras-list li:hover { transform: translateX(4px); border-color: var(--primary); }
 
-        /* BOTONES FLOTANTES */
-        .help-container { position: fixed; right: 24px; bottom: 24px; z-index: 9999; }
-        .feedback-container { position: fixed; left: 24px; bottom: 24px; z-index: 9998; }
-        .help-btn {
-            width: 54px; height: 54px; border: none; border-radius: 50%;
-            background: var(--primary); color: #1a1a1a; font-size: 1.4em; font-weight: 800;
-            cursor: pointer; box-shadow: 0 14px 28px rgba(0,0,0,0.18);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .help-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 18px 32px rgba(0,0,0,0.22); background: var(--primary-dark); }
-        .help-box {
-            position: absolute; bottom: 68px; right: 0; width: 250px; background: var(--card-bg);
-            border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--shadow);
-            padding: 16px 18px; color: var(--text-main); display: none; animation: fadeInUp 0.25s ease both;
-            font-size: 0.88em; line-height: 1.45;
-        }
-        .help-box strong { display: block; margin-bottom: 6px; color: var(--secondary); font-size: 1em; }
-        .help-mail { font-weight: 800; color: var(--secondary); word-break: break-word; }
+    /* ════ Botones flotantes ════ */
+    .help-container     { position: fixed; right: 24px; bottom: 24px; z-index: 9999; }
+    .feedback-container { position: fixed; left:  24px; bottom: 24px; z-index: 9998; }
+    .help-btn {
+        width: 54px; height: 54px; border: none; border-radius: 50%;
+        background: var(--primary); color: #1a1a1a; font-size: 1.4em; font-weight: 800;
+        cursor: pointer; box-shadow: 0 14px 28px rgba(0,0,0,.18);
+        transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .help-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 18px 32px rgba(0,0,0,.22); background: var(--primary-dark); }
+    .help-box {
+        position: absolute; bottom: 68px; right: 0; width: 250px;
+        background: var(--card-bg); border: 1px solid var(--border-color);
+        border-radius: 16px; box-shadow: var(--shadow);
+        padding: 16px 18px; color: var(--text-main);
+        display: none; animation: fadeInUp .25s ease both;
+        font-size: .88em; line-height: 1.45;
+    }
+    .help-box strong { display: block; margin-bottom: 6px; color: var(--secondary); font-size: 1em; }
+    .help-mail { font-weight: 800; color: var(--secondary); word-break: break-word; }
 
-        @media (max-width: 640px) {
-            body { padding: 14px; }
-            .contenedor { padding: 26px 18px; margin-top: 16px; border-radius: 20px; }
-            .btn-dark-mode { top: 15px; right: 15px; }
-            h2 { font-size: 1.8em; margin-bottom: 24px; }
-            .result-card { flex-direction: column; align-items: stretch; }
-            .btn-actions { flex-direction: column; width: 100%; }
-            .btn-wiki { width: 100%; text-align: center; display: block; }
-            .btn-secondary { width: 100%; text-align: center; display: block; }
-            .help-container { right: 16px; bottom: 16px; }
-            .feedback-container { left: 16px; bottom: 16px; }
-            .help-box { width: min(250px, calc(100vw - 32px)); }
-        }
+    /* ════════════════════════════════════════════════════════════════
+       WIKI PANEL LATERAL — Drawer profesional
+       ════════════════════════════════════════════════════════════════ */
+    .wiki-panel-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,.52);
+        z-index: 10002; display: none; justify-content: flex-end;
+        opacity: 0; transition: opacity .35s ease;
+        backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .wiki-panel-overlay.active { opacity: 1; }
+    .wiki-panel {
+        width: 64%; max-width: 1060px; min-width: 320px; height: 100%;
+        background: var(--card-bg);
+        border-left: 1px solid var(--border-color);
+        box-shadow: -24px 0 80px rgba(0,0,0,.22);
+        display: flex; flex-direction: column;
+        transform: translateX(110%);
+        transition: transform .42s cubic-bezier(.4,0,.2,1),
+                    background-color .3s ease, border-color .3s ease;
+        will-change: transform;
+    }
+    .wiki-panel-overlay.active .wiki-panel { transform: translateX(0); }
+    .wiki-panel-accent { height: 4px; background: linear-gradient(90deg, var(--primary), var(--primary-dark)); flex-shrink: 0; }
+    .wiki-panel-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 22px; border-bottom: 1px solid var(--border-color);
+        background: var(--card-bg); gap: 14px; flex-shrink: 0;
+        transition: background-color .3s ease, border-color .3s ease;
+    }
+    .wiki-panel-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .wiki-panel-badge {
+        font-size: .68em; font-weight: 800; color: #1a1a1a;
+        background: var(--primary); padding: 4px 9px;
+        border-radius: 999px; letter-spacing: .4px; flex-shrink: 0; text-transform: uppercase;
+    }
+    .wiki-panel-title {
+        font-weight: 800; color: var(--secondary);
+        font-size: 1em; white-space: nowrap; overflow: hidden;
+        text-overflow: ellipsis; letter-spacing: -.2px;
+    }
+    .wiki-panel-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .btn-wiki-ext {
+        padding: 8px 14px; background: transparent; color: var(--secondary);
+        border: 2px solid var(--border-color); border-radius: 10px;
+        font-weight: 700; font-family: 'Inter', sans-serif; font-size: .8em;
+        cursor: pointer; text-decoration: none;
+        display: inline-flex; align-items: center; gap: 6px;
+        transition: all .18s ease; white-space: nowrap;
+    }
+    .btn-wiki-ext:hover { border-color: var(--primary); color: var(--secondary); background: rgba(255,195,0,.10); transform: translateY(-1px); }
+    body.dark-mode .btn-wiki-ext { color: var(--text-main); border-color: var(--border-color); }
+    body.dark-mode .btn-wiki-ext:hover { border-color: var(--primary); color: var(--primary); background: rgba(255,195,0,.08); }
+    .wiki-panel-close-btn {
+        background: var(--status-bg); border: 1px solid var(--border-color);
+        width: 34px; height: 34px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1em; font-weight: 800; cursor: pointer;
+        color: var(--text-main); transition: all .2s ease; flex-shrink: 0;
+    }
+    .wiki-panel-close-btn:hover { background: var(--primary); color: #1a1a1a; border-color: var(--primary); transform: scale(1.1); }
+    .wiki-iframe-wrap { flex: 1; overflow: hidden; position: relative; }
 
-        /* ============================================================
-           WIKI PANEL LATERAL — NUEVAS REGLAS (nada existente modificado)
-           Drawer profesional que desliza desde la derecha
-           ============================================================ */
+    /* ════════════════════════════════════════════════════════════════
+       WIKI INCRUSTADA — CSS del prototipo adaptado al sistema UNID
+       Todo con prefijo .wk para evitar conflictos con el buscador.
+       ════════════════════════════════════════════════════════════════ */
 
-        /* Backdrop / overlay de fondo */
-        .wiki-panel-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.52);
-            z-index: 10002;
-            display: none;
-            justify-content: flex-end;
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-        }
-        .wiki-panel-overlay.active {
-            opacity: 1;
-        }
+    /* Variables de acento del wiki */
+    :root {
+        --wiki-accent:      #1a1a6e;
+        --wiki-accent-text: #ffffff;
+        --wiki-accent-soft: #e8eaf6;
+    }
+    body.dark-mode {
+        --wiki-accent:      #FFC300;  /* En dark usa el amarillo del buscador */
+        --wiki-accent-text: #1a1a1a;
+        --wiki-accent-soft: rgba(255,195,0,.12);
+    }
 
-        /* Panel / drawer */
-        .wiki-panel {
-            width: 64%;
-            max-width: 1060px;
-            min-width: 320px;
-            height: 100%;
-            background: var(--card-bg);
-            border-left: 1px solid var(--border-color);
-            box-shadow: -24px 0 80px rgba(0, 0, 0, 0.22);
-            display: flex;
-            flex-direction: column;
-            transform: translateX(110%);
-            transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                        background-color 0.3s ease,
-                        border-color 0.3s ease;
-            will-change: transform;
-        }
-        .wiki-panel-overlay.active .wiki-panel {
-            transform: translateX(0);
-        }
+    /* Contenedor raíz del wiki */
+    .wk {
+        height: 100%;
+        overflow-y: auto;
+        background: var(--bg-body);
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-main);
+        transition: background-color .3s ease, color .3s ease;
+    }
+    .wk::-webkit-scrollbar { width: 6px; }
+    .wk::-webkit-scrollbar-track { background: var(--bg-body); }
+    .wk::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+    .wk * { box-sizing: border-box; }
 
-        /* Franja amarilla superior — acento de marca */
-        .wiki-panel-accent {
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-            flex-shrink: 0;
-        }
+    /* El header interno del wiki queda oculto; el drawer ya tiene cabecera */
+    .wk .wk-header { display: none; }
 
-        /* Cabecera del panel */
-        .wiki-panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 22px;
-            border-bottom: 1px solid var(--border-color);
-            background: var(--card-bg);
-            gap: 14px;
-            flex-shrink: 0;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .wiki-panel-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
-        }
-        .wiki-panel-badge {
-            font-size: 0.68em;
-            font-weight: 800;
-            color: #1a1a1a;
-            background: var(--primary);
-            padding: 4px 9px;
-            border-radius: 999px;
-            letter-spacing: 0.4px;
-            flex-shrink: 0;
-            text-transform: uppercase;
-        }
-        .wiki-panel-title {
-            font-weight: 800;
-            color: var(--secondary);
-            font-size: 1em;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            letter-spacing: -0.2px;
-        }
+    /* Campus bar */
+    .wk .campus-bar {
+        padding: 11px 20px;
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border-color);
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        position: sticky; top: 0; z-index: 50;
+        transition: background-color .3s ease, border-color .3s ease;
+    }
+    .wk .campus-label { font-size: 12px; color: var(--text-light); margin-right: 4px; font-weight: 600; }
+    .wk .campus-btn {
+        padding: 5px 13px; border-radius: 20px;
+        border: 1px solid var(--border-color);
+        background: var(--status-bg); font-size: 12px;
+        font-family: 'Inter', sans-serif; cursor: pointer;
+        color: var(--text-main); transition: all .15s ease; font-weight: 600;
+    }
+    .wk .campus-btn:hover    { border-color: var(--wiki-accent); color: var(--wiki-accent); }
+    .wk .campus-btn.active   { background: var(--wiki-accent); color: var(--wiki-accent-text); border-color: var(--wiki-accent); }
+    .wk .campus-btn.placeholder { opacity: .4; cursor: default; }
 
-        /* Acciones de cabecera: abrir externa + cerrar */
-        .wiki-panel-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-        .btn-wiki-ext {
-            padding: 8px 14px;
-            background: transparent;
-            color: var(--secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-weight: 700;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8em;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.18s ease;
-            white-space: nowrap;
-        }
-        .btn-wiki-ext:hover {
-            border-color: var(--primary);
-            color: var(--secondary);
-            background: rgba(255, 195, 0, 0.10);
-            transform: translateY(-1px);
-        }
-        body.dark-mode .btn-wiki-ext {
-            color: var(--text-main);
-            border-color: var(--border-color);
-        }
-        body.dark-mode .btn-wiki-ext:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(255, 195, 0, 0.08);
-        }
-        .wiki-panel-close-btn {
-            background: var(--status-bg);
-            border: 1px solid var(--border-color);
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1em;
-            font-weight: 800;
-            cursor: pointer;
-            color: var(--text-main);
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            line-height: 1;
-        }
-        .wiki-panel-close-btn:hover {
-            background: var(--primary);
-            color: #1a1a1a;
-            border-color: var(--primary);
-            transform: scale(1.1);
-        }
+    /* Content area */
+    .wk .content { padding: 20px; }
+    .wk .campus-header { margin-bottom: 20px; }
+    .wk .campus-name   { font-size: 20px; font-weight: 700; color: var(--text-main); }
+    .wk .campus-sub    { font-size: 13px; color: var(--text-light); margin-top: 3px; }
 
-        /* Contenedor del iframe */
-        .wiki-iframe-wrap {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
+    /* Badge genérico */
+    .wk .badge     { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .wk .badge-new { background: #e8f5e9; color: #2e7d32; }
 
-        /* Loader de carga */
-        .wiki-iframe-loader {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: var(--card-bg);
-            gap: 18px;
-            z-index: 2;
-            transition: opacity 0.4s ease, background-color 0.3s ease;
-            pointer-events: none;
-        }
-        .wiki-iframe-loader.hidden {
-            opacity: 0;
-        }
-        .wiki-loader-ring {
-            width: 44px;
-            height: 44px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.85s linear infinite;
-        }
-        .wiki-loader-label {
-            font-size: 0.87em;
-            color: var(--text-light);
-            font-weight: 600;
-            margin: 0;
-        }
+    /* Tabs de navegación */
+    .wk .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+    .wk .tab {
+        padding: 8px 14px; border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: var(--card-bg); font-size: 13px;
+        font-family: 'Inter', sans-serif; cursor: pointer;
+        color: var(--text-light);
+        display: flex; align-items: center; gap: 6px;
+        transition: all .15s ease; font-weight: 600;
+    }
+    .wk .tab:hover { border-color: var(--border-color); color: var(--text-main); }
+    .wk .tab.active { background: var(--wiki-accent); color: var(--wiki-accent-text); border-color: var(--wiki-accent); }
+    .wk .tab i { font-size: 15px; }
+    .wk .tab-badge { background: #e53935; color: #fff; border-radius: 10px; padding: 1px 6px; font-size: 11px; margin-left: 2px; }
 
-        /* El iframe en sí */
-        #wikiIframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
+    /* Panels */
+    .wk .panel        { display: none; }
+    .wk .panel.active { display: block; }
 
-        /* Scrollbar del panel (webkit) */
-        .wiki-panel ::-webkit-scrollbar { width: 6px; }
-        .wiki-panel ::-webkit-scrollbar-track { background: var(--bg-body); }
-        .wiki-panel ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+    /* Info grid */
+    .wk .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .wk .info-card {
+        background: var(--card-bg); border-radius: 12px;
+        padding: 14px 16px; border: 1px solid var(--border-color);
+        transition: background-color .3s ease, border-color .3s ease;
+    }
+    .wk .info-card:hover { border-color: var(--primary); }
+    .wk .info-card-label {
+        font-size: 11px; color: var(--text-light);
+        text-transform: uppercase; letter-spacing: .5px;
+        margin-bottom: 6px; font-weight: 700;
+        display: flex; align-items: center; gap: 5px;
+    }
+    .wk .info-card-value { font-size: 14px; font-weight: 600; color: var(--text-main); line-height: 1.4; }
+    .wk .info-card-value a { color: var(--wiki-accent); text-decoration: none; }
+    .wk .info-card-value a:hover { text-decoration: underline; }
 
-        /* Responsive del panel */
-        @media (max-width: 900px) {
-            .wiki-panel { width: 80%; }
-        }
-        @media (max-width: 640px) {
-            .wiki-panel {
-                width: 100%;
-                max-width: 100%;
-                min-width: 0;
-                border-left: none;
-            }
-            .wiki-panel-header { padding: 12px 16px; }
-            .wiki-panel-title { font-size: 0.9em; }
-            /* Ocultar el texto del botón externo en móvil, solo icono */
-            .btn-wiki-ext .ext-label { display: none; }
-            .btn-wiki-ext { padding: 8px 10px; }
-        }
+    /* Coord box */
+    .wk .coord-box {
+        background: var(--card-bg); border-radius: 12px;
+        padding: 16px; margin-top: 8px; border: 1px solid var(--border-color);
+        transition: background-color .3s ease, border-color .3s ease;
+    }
+    .wk .coord-name {
+        font-size: 12px; color: var(--text-light); margin-bottom: 10px;
+        font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .wk .coord-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13px; color: var(--text-main); }
+    .wk .coord-row i { font-size: 14px; color: var(--text-light); width: 16px; flex-shrink: 0; }
+    .wk .wiki-link { color: var(--wiki-accent); text-decoration: none; font-weight: 600; }
+    .wk .wiki-link:hover { text-decoration: underline; }
+
+    /* Amenidades */
+    .wk .amenity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+    .wk .amenity-card {
+        background: var(--card-bg); border: 1px solid var(--border-color);
+        border-radius: 14px; padding: 16px;
+        display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+        transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .wk .amenity-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+    .wk .amenity-icon {
+        width: 36px; height: 36px; border-radius: 8px;
+        background: var(--wiki-accent-soft);
+        display: flex; align-items: center; justify-content: center;
+        transition: background-color .3s ease;
+    }
+    .wk .amenity-icon i { font-size: 18px; color: var(--wiki-accent); }
+    .wk .amenity-name { font-size: 13px; font-weight: 600; color: var(--text-main); line-height: 1.3; }
+    .wk .amenity-desc { font-size: 12px; color: var(--text-light); line-height: 1.4; }
+
+    /* Programas */
+    .wk .prog-section   { margin-bottom: 20px; }
+    .wk .prog-section-title {
+        font-size: 11px; font-weight: 700; color: var(--text-light);
+        text-transform: uppercase; letter-spacing: .5px;
+        margin-bottom: 10px; padding-bottom: 6px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .wk .prog-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border-color); }
+    .wk .prog-row:last-child { border-bottom: none; }
+    .wk .prog-row:hover { background: var(--status-bg); border-radius: 8px; padding-left: 6px; }
+    .wk .prog-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .wk .ug  { background: #e3f2fd; color: #0d47a1; }
+    .wk .lx  { background: #f3e5f5; color: #6a1b9a; }
+    .wk .pg  { background: #fff8e1; color: #e65100; }
+    .wk .prog-info { flex: 1; }
+    .wk .prog-name   { font-size: 13px; font-weight: 600; color: var(--text-main); }
+    .wk .prog-detail { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+    /* Tabla de costos */
+    .wk .cost-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+    .wk .cost-table th {
+        text-align: left; padding: 8px 10px; font-size: 11px; font-weight: 700;
+        color: var(--text-light); text-transform: uppercase; letter-spacing: .4px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .wk .cost-table td { padding: 8px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+    .wk .cost-table tr:last-child td { border-bottom: none; }
+    .wk .cost-table tr:hover td { background: var(--status-bg); }
+    .wk .cost-table .num { font-weight: 700; color: var(--wiki-accent); }
+
+    /* Avisos */
+    .wk .aviso-card {
+        border-radius: 14px; border: 1px solid var(--border-color);
+        padding: 16px; margin-bottom: 12px;
+        background: var(--card-bg);
+        transition: background-color .3s ease, border-color .3s ease;
+    }
+    .wk .aviso-card:hover { border-color: var(--primary); }
+    .wk .aviso-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .wk .aviso-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+    .wk .aviso-tag.urgente { background: #fce4ec; color: #b71c1c; }
+    .wk .aviso-tag.info    { background: #e3f2fd; color: #0d47a1; }
+    .wk .aviso-tag.promo   { background: #e8f5e9; color: #1b5e20; }
+    .wk .aviso-title { font-size: 14px; font-weight: 600; color: var(--text-main); }
+    .wk .aviso-body  { font-size: 13px; color: var(--text-light); line-height: 1.5; }
+
+    .wk .section-sub { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 16px 0 12px; }
+
+    /* Footer del wiki */
+    .wk .wiki-footer {
+        margin-top: 24px; padding: 14px 20px;
+        border-top: 1px solid var(--border-color);
+        font-size: 12px; color: var(--text-light);
+        display: flex; align-items: center; justify-content: space-between;
+        flex-wrap: wrap; gap: 8px;
+        background: var(--card-bg);
+        transition: background-color .3s ease, border-color .3s ease;
+    }
+    .wk .wiki-footer-badge {
+        background: var(--wiki-accent-soft); color: var(--wiki-accent);
+        padding: 3px 10px; border-radius: 20px;
+        font-size: 11px; font-weight: 700; letter-spacing: .3px;
+        transition: background-color .3s ease, color .3s ease;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       RESPONSIVE
+       ════════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+        .wiki-panel { width: 80%; }
+    }
+    @media (max-width: 640px) {
+        .app-nav { padding: 0 16px; }
+        .app-brand-title { display: none; }
+        .app-brand-sep  { display: none; }
+        .nav-pill .nav-label { display: none; }
+        .nav-pill { padding: 7px 10px; }
+        .page-body { padding: 14px; }
+        .contenedor { padding: 26px 18px; margin-top: 16px; border-radius: 20px; }
+        h2 { font-size: 1.8em; margin-bottom: 24px; }
+        .result-card { flex-direction: column; align-items: stretch; }
+        .btn-actions { flex-direction: column; width: 100%; }
+        .btn-wiki, .btn-secondary { width: 100%; text-align: center; display: block; }
+        .help-container     { right: 16px; bottom: 16px; }
+        .feedback-container { left:  16px; bottom: 16px; }
+        .help-box { width: min(250px, calc(100vw - 32px)); }
+        .wiki-panel { width: 100%; max-width: 100%; min-width: 0; border-left: none; }
+        .wiki-panel-header { padding: 12px 16px; }
+        .btn-wiki-ext .ext-label { display: none; }
+        .btn-wiki-ext { padding: 8px 10px; }
+        .wk .info-grid { grid-template-columns: 1fr; }
+        .wk .amenity-grid { grid-template-columns: repeat(2, 1fr); }
+    }
     </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════
-     CONTENEDOR PRINCIPAL — SIN CAMBIOS
-     ══════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════════════
+     BARRA DE NAVEGACIÓN PROFESIONAL
+     ══════════════════════════════════════════════════════════════════ -->
+<nav class="app-nav">
+    <div class="app-nav-left">
+        <span class="app-brand-badge">UNID</span>
+        <span class="app-brand-sep"></span>
+        <span class="app-brand-title">Portal de Agentes</span>
+    </div>
+    <div class="app-nav-right">
+        <!-- Buscador: siempre activo como página principal -->
+        <button class="nav-pill active">
+            <i class="fas fa-search"></i>
+            <span class="nav-label">Buscador</span>
+        </button>
+        <!-- Wiki: abre el drawer con el campus Monterrey como demo -->
+        <button class="nav-pill" onclick="abrirWikiPanel('wiki_campus_monterrey.html', 'Campus Monterrey')">
+            <i class="fas fa-book-open"></i>
+            <span class="nav-label">Wiki Monterrey</span>
+        </button>
+        <span class="nav-divider"></span>
+        <!-- Modo oscuro movido a la nav bar -->
+        <button id="btnDarkMode" class="btn-dark-mode-nav" title="Alternar modo oscuro">🌙</button>
+    </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CUERPO PRINCIPAL — Buscador (sin cambios internos)
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page-body">
 <div class="contenedor">
-    <button id="btnDarkMode" class="btn-dark-mode" title="Alternar modo oscuro">🌙</button>
     <h2>Buscador <strong>UNID</strong></h2>
     <div class="status-box">
         <span class="status-text" style="color:var(--secondary)">Estado:</span>
         <span id="statusCarga" class="status-text"><span class="spinner"></span> Conectando base de datos...</span>
     </div>
-    
     <div class="input-group">
         <div class="mode-switch-container">
             <span id="lblCampus" class="mode-label active" onclick="toggleMode(false)">🏫 Info General</span>
             <div class="flip-switch" id="modeSwitch" onclick="toggleMode()">
-                <div class="flip-switch-inner" id="switchInner">
+                <div class="flip-switch-inner">
                     <div class="flip-front"><i class="fa-solid fa-university"></i></div>
                     <div class="flip-back"><i class="fa-solid fa-file-pdf"></i></div>
                 </div>
             </div>
             <span id="lblPlanes" class="mode-label" onclick="toggleMode(true)">📄 Planes de Estudio</span>
         </div>
-
         <div class="search-wrap">
             <input type="text" id="textoBusqueda" placeholder="Ej: Monterrey, Derecho, Diseño..." autocomplete="off">
         </div>
         <div class="search-hint">Escribe para buscar en vivo. No es necesario presionar Enter.</div>
         <button class="btn-buscar" id="btnBuscar" onclick="buscarInstituto()">Realizar Búsqueda</button>
     </div>
-    
     <div id="resultado">
-        <p style="color: var(--text-light); text-align: center; font-size: 0.9em;">Esperando entrada de datos...</p>
+        <p style="color:var(--text-light);text-align:center;font-size:.9em;">Esperando entrada de datos...</p>
     </div>
 </div>
-
-<!-- BOTÓN FEEDBACK — SIN CAMBIOS -->
-<div class="feedback-container">
-    <button id="btnAbrirFeedback" class="help-btn" style="background: var(--secondary); color: var(--card-bg);" title="Enviar Opinión">💬</button>
 </div>
 
-<!-- MODAL FEEDBACK — SIN CAMBIOS -->
+<!-- BOTÓN FEEDBACK -->
+<div class="feedback-container">
+    <button id="btnAbrirFeedback" class="help-btn" style="background:var(--secondary);color:var(--card-bg);" title="Enviar Opinión">💬</button>
+</div>
+
+<!-- MODAL FEEDBACK -->
 <div id="modalFeedback" class="modal-overlay">
-    <div class="modal-content" style="max-width: 400px;">
+    <div class="modal-content" style="max-width:400px;">
         <button class="modal-close" onclick="cerrarModalFeedback()">✕</button>
-        <h3 class="modal-title" style="margin-bottom: 10px;">Danos tu opinión</h3>
-        <p style="color: var(--text-light); font-size: 0.9em; margin-bottom: 20px;">¿Encontraste un error o tienes una sugerencia? Te leemos de forma anónima.</p>
-        
+        <h3 class="modal-title" style="margin-bottom:10px;">Danos tu opinión</h3>
+        <p style="color:var(--text-light);font-size:.9em;margin-bottom:20px;">¿Encontraste un error o tienes una sugerencia? Te leemos de forma anónima.</p>
         <form id="formularioFeedback" action="https://formspree.io/f/xeevgpea" method="POST" class="input-group">
             <label>Tu mensaje:</label>
-            <textarea name="mensaje" rows="4" required placeholder="Escribe aquí tu retroalimentación..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 12px; background: var(--input-bg); color: var(--text-main); font-family: inherit; resize: vertical; outline: none;"></textarea>
-            <button type="submit" id="btnEnviarMensaje" class="btn-buscar" style="margin-top: 15px;">Enviar Mensaje</button>
-            <p id="mensajeEstado" style="text-align: center; font-size: 0.9em; margin-top: 10px; font-weight: 600; display: none;"></p>
+            <textarea name="mensaje" rows="4" required placeholder="Escribe aquí tu retroalimentación..." style="width:100%;padding:12px;border:2px solid var(--border-color);border-radius:12px;background:var(--input-bg);color:var(--text-main);font-family:inherit;resize:vertical;outline:none;"></textarea>
+            <button type="submit" id="btnEnviarMensaje" class="btn-buscar" style="margin-top:15px;">Enviar Mensaje</button>
+            <p id="mensajeEstado" style="text-align:center;font-size:.9em;margin-top:10px;font-weight:600;display:none;"></p>
         </form>
     </div>
 </div>
 
-<!-- BOTÓN AYUDA — SIN CAMBIOS -->
+<!-- BOTÓN AYUDA -->
 <div class="help-container">
     <div id="helpBox" class="help-box">
         <strong>¿Dudas o sugerencias?</strong>
@@ -818,7 +795,7 @@
     <button id="helpBtn" class="help-btn" title="Ayuda">?</button>
 </div>
 
-<!-- MODAL CARRERAS — SIN CAMBIOS -->
+<!-- MODAL CARRERAS -->
 <div id="modalCarreras" class="modal-overlay">
     <div class="modal-content">
         <button class="modal-close" onclick="cerrarModalCarreras()">✕</button>
@@ -829,531 +806,457 @@
     </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     WIKI PANEL LATERAL — NUEVA SECCIÓN AGREGADA
-     Drawer profesional: desliza desde la derecha sobre el buscador
-     ══════════════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════════════
+     WIKI PANEL LATERAL — Wiki incrustada directamente (sin iframe)
+     ══════════════════════════════════════════════════════════════════ -->
 <div id="wikiPanelOverlay" class="wiki-panel-overlay">
-    <div class="wiki-panel" id="wikiPanel">
-
-        <!-- Franja de acento amarillo UNID -->
+    <div class="wiki-panel">
         <div class="wiki-panel-accent"></div>
 
         <!-- Cabecera del panel -->
         <div class="wiki-panel-header">
             <div class="wiki-panel-left">
                 <span class="wiki-panel-badge">WIKI UNID</span>
-                <span id="wikiPanelTitle" class="wiki-panel-title">Wiki del Campus</span>
+                <span id="wikiPanelTitle" class="wiki-panel-title">Campus Monterrey</span>
             </div>
             <div class="wiki-panel-actions">
-                <!-- Abrir en pestaña real (fallback si hay bloqueo de iframe) -->
-                <a id="btnWikiExternal"
-                   href="#"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="btn-wiki-ext"
-                   title="Abrir en nueva pestaña">
+                <a id="btnWikiExternal" href="wiki_campus_monterrey.html" target="_blank" rel="noopener noreferrer" class="btn-wiki-ext" title="Abrir en nueva pestaña">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     <span class="ext-label">Nueva pestaña</span>
                 </a>
-                <!-- Cerrar panel -->
-                <button class="wiki-panel-close-btn"
-                        onclick="cerrarWikiPanel()"
-                        title="Cerrar wiki">✕</button>
+                <button class="wiki-panel-close-btn" onclick="cerrarWikiPanel()" title="Cerrar">✕</button>
             </div>
         </div>
 
-        <!-- Área del iframe con spinner de carga -->
+        <!-- ── Contenido wiki incrustado directamente (clase .wk) ── -->
         <div class="wiki-iframe-wrap">
-            <div class="wiki-iframe-loader" id="wikiLoader">
-                <div class="wiki-loader-ring"></div>
-                <p class="wiki-loader-label">Cargando wiki del campus...</p>
-            </div>
-            <iframe id="wikiIframe"
-                    src="about:blank"
-                    title="Wiki del Campus UNID"
-                    allowfullscreen
-                    loading="eager">
-            </iframe>
-        </div>
+        <div class="wk">
 
-    </div>
-</div>
-<!-- ══════════════════════════════════════════════════════════════
-     FIN WIKI PANEL
-     ══════════════════════════════════════════════════════════════ -->
+            <!-- Campus bar (navegación entre campus) -->
+            <div class="campus-bar">
+                <span class="campus-label">Campus:</span>
+                <button class="campus-btn active" onclick="selectCampus('monterrey',this)">Monterrey</button>
+                <button class="campus-btn placeholder" title="Próximamente">Guadalajara</button>
+                <button class="campus-btn placeholder" title="Próximamente">CDMX Norte</button>
+                <button class="campus-btn placeholder" title="Próximamente">Puebla</button>
+                <button class="campus-btn placeholder" title="Próximamente">+ 41 campus</button>
+            </div>
+
+            <div class="content">
+                <div class="campus-header">
+                    <div class="campus-name">📍 Campus Monterrey <span class="badge badge-new" style="font-size:12px;vertical-align:middle">Nuevo campus</span></div>
+                    <div class="campus-sub">Padre Mier 410 esq. Rayón, Centro de Monterrey</div>
+                </div>
+
+                <!-- Tabs de navegación -->
+                <div class="tabs">
+                    <button class="tab active" onclick="wkShowTab('info',this)"><i class="ti ti-building"></i> Info base</button>
+                    <button class="tab" onclick="wkShowTab('amenidades',this)"><i class="ti ti-star"></i> Amenidades</button>
+                    <button class="tab" onclick="wkShowTab('oferta',this)"><i class="ti ti-school"></i> Oferta educativa</button>
+                    <button class="tab" onclick="wkShowTab('avisos',this)"><i class="ti ti-bell"></i> Avisos <span class="tab-badge">3</span></button>
+                </div>
+
+                <!-- ─── INFO BASE ─── -->
+                <div class="panel active" id="wk-panel-info">
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-label"><i class="ti ti-map-pin"></i> Dirección</div>
+                            <div class="info-card-value">Padre Mier 410 esq. Rayón<br>Centro de Monterrey</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-label"><i class="ti ti-phone"></i> Teléfono campus</div>
+                            <div class="info-card-value"><a href="tel:8136083217">813 608 3217</a></div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-label"><i class="ti ti-clock"></i> Horario de atención</div>
+                            <div class="info-card-value">Lunes a viernes<br>9:00 am – 7:00 pm</div>
+                        </div>
+                    </div>
+                    <div class="coord-box">
+                        <div class="coord-name"><i class="ti ti-user-check"></i> Coordinador de admisiones — agendar citas</div>
+                        <div class="coord-row"><i class="ti ti-user"></i> <span>Adrián Padilla Flores</span></div>
+                        <div class="coord-row"><i class="ti ti-mail"></i> <a class="wiki-link" href="mailto:adrian.padilla.flores@unid.mx">adrian.padilla.flores@unid.mx</a></div>
+                        <div class="coord-row"><i class="ti ti-phone"></i> <a class="wiki-link" href="tel:8181396973">818 139 6973</a></div>
+                        <div class="coord-row"><i class="ti ti-calendar"></i> <span>Mejor horario para citas: <strong>2:00 pm – 7:00 pm</strong></span></div>
+                    </div>
+                </div>
+
+                <!-- ─── AMENIDADES ─── -->
+                <div class="panel" id="wk-panel-amenidades">
+                    <div class="amenity-grid">
+                        <div class="amenity-card">
+                            <div class="amenity-icon"><i class="ti ti-ball-football"></i></div>
+                            <div class="amenity-name">Cancha deportiva</div>
+                            <div class="amenity-desc">Cancha multiusos en azotea con vista a la ciudad</div>
+                        </div>
+                        <div class="amenity-card">
+                            <div class="amenity-icon"><i class="ti ti-microphone"></i></div>
+                            <div class="amenity-name">Cabina de radio</div>
+                            <div class="amenity-desc">Estudio de grabación con green screen y equipo profesional</div>
+                        </div>
+                        <div class="amenity-card">
+                            <div class="amenity-icon"><i class="ti ti-scissors"></i></div>
+                            <div class="amenity-name">Taller de modas</div>
+                            <div class="amenity-desc">Taller equipado con maniquíes y mesas de diseño</div>
+                        </div>
+                        <div class="amenity-card">
+                            <div class="amenity-icon"><i class="ti ti-tools"></i></div>
+                            <div class="amenity-name">Serigrafía</div>
+                            <div class="amenity-desc">Taller de serigrafía para diseño y estampado textil</div>
+                        </div>
+                        <div class="amenity-card">
+                            <div class="amenity-icon"><i class="ti ti-scale"></i></div>
+                            <div class="amenity-name">Sala de juicios orales</div>
+                            <div class="amenity-desc">Réplica de sala judicial para práctica de Derecho</div>
+                        </div>
+                        <div class="amenity-card">
+                            <div class="amenity-icon"><i class="ti ti-armchair"></i></div>
+                            <div class="amenity-name">Áreas de estudio</div>
+                            <div class="amenity-desc">Salas colaborativas con mobiliario moderno y cómodo</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ─── OFERTA EDUCATIVA ─── -->
+                <div class="panel" id="wk-panel-oferta">
+                    <div class="prog-section">
+                        <div class="prog-section-title">Licenciaturas escolarizadas (UG) — Lun–Vie 9am–2pm</div>
+                        <div class="prog-row"><span class="prog-badge ug">UG</span><div class="prog-info"><div class="prog-name">DAEM</div><div class="prog-detail">Ciclos 1–3 · Carrusel con sept25</div></div></div>
+                        <div class="prog-row"><span class="prog-badge ug">UG</span><div class="prog-info"><div class="prog-name">Diseño Gráfico</div><div class="prog-detail">Ciclos 1–3 · Carrusel con sept25</div></div></div>
+                        <div class="prog-row"><span class="prog-badge ug">UG</span><div class="prog-info"><div class="prog-name">Contabilidad</div><div class="prog-detail">Ciclo 3</div></div></div>
+                        <div class="prog-row"><span class="prog-badge ug">UG</span><div class="prog-info"><div class="prog-name">Modas</div><div class="prog-detail">Ciclos 1–3 · Carrusel con sept25</div></div></div>
+                    </div>
+                    <div class="prog-section">
+                        <div class="prog-section-title">Licenciaturas ejecutivas (LX) — Sabatino</div>
+                        <div class="prog-row"><span class="prog-badge lx">LX</span><div class="prog-info"><div class="prog-name">Contabilidad</div><div class="prog-detail">Sáb 2pm–6pm · Ciclos 1–2–3</div></div></div>
+                        <div class="prog-row"><span class="prog-badge lx">LX</span><div class="prog-info"><div class="prog-name">Derecho</div><div class="prog-detail">Sáb 9am–2pm · Ciclos 1–2–3</div></div></div>
+                        <div class="prog-row"><span class="prog-badge lx">LX</span><div class="prog-info"><div class="prog-name">Mercadotecnia</div><div class="prog-detail">Sáb 9am–2pm · Ciclos 1–2–3</div></div></div>
+                        <div class="prog-row"><span class="prog-badge lx">LX</span><div class="prog-info"><div class="prog-name">Administración</div><div class="prog-detail">Sáb 9am–2pm · Ciclos 1–2–3</div></div></div>
+                        <div class="prog-row"><span class="prog-badge lx">LX</span><div class="prog-info"><div class="prog-name">Ingeniería Industrial y Logística</div><div class="prog-detail">Sáb 2pm–6pm · Ciclos 1–2–3</div></div></div>
+                    </div>
+                    <div class="prog-section">
+                        <div class="prog-section-title">Posgrados / Maestrías — Sabatino 9am–2pm</div>
+                        <div class="prog-row"><span class="prog-badge pg">PG</span><div class="prog-info"><div class="prog-name">Maestría en Administración</div><div class="prog-detail">Ciclos 1–3 · Carrusel con sept25</div></div></div>
+                        <div class="prog-row"><span class="prog-badge pg">PG</span><div class="prog-info"><div class="prog-name">Maestría en Centros Hospitalarios</div><div class="prog-detail">Ciclos 1–3 · Carrusel con sept25</div></div></div>
+                        <div class="prog-row"><span class="prog-badge pg">PG/ME</span><div class="prog-info"><div class="prog-name">Maestría en Educación</div><div class="prog-detail">Ciclos 1–2–3 · Carrusel con sept25</div></div></div>
+                    </div>
+                    <div class="section-sub">Costos por modalidad</div>
+                    <table class="cost-table">
+                        <thead><tr><th>Modalidad</th><th>Línea</th><th>Base</th><th>Beca</th><th>Inscripción</th><th>Mensualidad</th></tr></thead>
+                        <tbody>
+                            <tr><td>Lic. Escolarizada</td><td>UG</td><td>$6,300</td><td class="num">60%</td><td class="num">$1,190</td><td class="num">$3,115</td></tr>
+                            <tr><td>Lic. Ejecutiva</td><td>LX</td><td>$3,300</td><td class="num">50%</td><td class="num">$905</td><td class="num">$1,785</td></tr>
+                            <tr><td>Maestría Ed. Presencial</td><td>MAED</td><td>$5,000</td><td class="num">60%</td><td class="num">$1,060</td><td class="num">$2,060</td></tr>
+                            <tr><td>Maestrías (MADN/MERD/MAHO)</td><td>PG</td><td>$5,800</td><td class="num">55%</td><td class="num">$1,140</td><td class="num">$2,670</td></tr>
+                            <tr><td>Bachillerato en línea</td><td>HSOL</td><td>$1,550</td><td class="num">50%</td><td class="num">$1,145</td><td class="num">$1,335</td></tr>
+                            <tr><td>Lic. en línea</td><td>UGOL</td><td>$3,417</td><td class="num">50%</td><td class="num">$902</td><td class="num">$1,769</td></tr>
+                            <tr><td>Maestría en línea</td><td>MAEDOL</td><td>$4,582</td><td class="num">60%</td><td class="num">$1,030</td><td class="num">$1,940</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ─── AVISOS ─── -->
+                <div class="panel" id="wk-panel-avisos">
+                    <div class="aviso-card">
+                        <div class="aviso-top"><span class="aviso-tag urgente">Urgente</span><span class="aviso-title">Cierre de inscripciones</span></div>
+                        <div class="aviso-body">El cierre de inscripciones es del <strong>22 al 24 de enero</strong>. Asegúrate de que el prospecto quede inscrito antes de esa fecha.</div>
+                    </div>
+                    <div class="aviso-card">
+                        <div class="aviso-top"><span class="aviso-tag info">Evento</span><span class="aviso-title">Open House — 16 y 17 de enero</span></div>
+                        <div class="aviso-body">El campus tiene Open House los días <strong>16 y 17 de enero</strong>. Ideal para invitar prospectos que quieran conocer las instalaciones antes de inscribirse.</div>
+                    </div>
+                    <div class="aviso-card">
+                        <div class="aviso-top"><span class="aviso-tag promo">Convenio</span><span class="aviso-title">Descuentos con convenios activos</span></div>
+                        <div class="aviso-body"><strong>Farmacias del Ahorro:</strong> beca 55/55 · <strong>PEPSI:</strong> beca 90 con descuento 55. Preguntar al prospecto si trabaja en alguna de estas empresas para aplicar convenio.</div>
+                    </div>
+                </div>
+
+            </div><!-- /content -->
+
+            <div class="wiki-footer">
+                <span>Última actualización: Junio 2025</span>
+                <span class="wiki-footer-badge">WIKI INTERNA UNID</span>
+            </div>
+
+        </div><!-- /wk -->
+        </div><!-- /wiki-iframe-wrap -->
+
+    </div><!-- /wiki-panel -->
+</div><!-- /wikiPanelOverlay -->
+
 
 <script>
-    // ============================================================
-    // MODO NOCHE — SIN CAMBIOS
-    // ============================================================
-    const btnDarkMode = document.getElementById('btnDarkMode');
-    const toggleDarkMode = () => {
-        document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        btnDarkMode.innerText = isDark ? '☀️' : '🌙';
-    };
-    if(localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        btnDarkMode.innerText = '☀️';
+/* ════════════════════════════════════════════════════════════════════
+   MODO NOCHE
+   ════════════════════════════════════════════════════════════════════ */
+const btnDarkMode = document.getElementById('btnDarkMode');
+const applyTheme = (dark) => {
+    document.body.classList.toggle('dark-mode', dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+    btnDarkMode.innerText = dark ? '☀️' : '🌙';
+};
+if (localStorage.getItem('theme') === 'dark') applyTheme(true);
+btnDarkMode.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark-mode')));
+
+/* ════════════════════════════════════════════════════════════════════
+   DATOS Y CONFIGURACIÓN
+   ════════════════════════════════════════════════════════════════════ */
+let datosCampus = [], datosPlanes = [];
+const archivosA_Cargar = ['database.xlsx'];
+let debounceTimer = null;
+
+let modoPlanes = false;
+const modeSwitch   = document.getElementById('modeSwitch');
+const lblCampus    = document.getElementById('lblCampus');
+const lblPlanes    = document.getElementById('lblPlanes');
+const inputBusqueda = document.getElementById('textoBusqueda');
+
+function toggleMode(forceMode = null) {
+    if (forceMode !== null) { if (modoPlanes === forceMode) return; modoPlanes = forceMode; }
+    else modoPlanes = !modoPlanes;
+    if (modoPlanes) {
+        modeSwitch.classList.add('active'); lblPlanes.classList.add('active'); lblCampus.classList.remove('active');
+        inputBusqueda.placeholder = "Ej: Derecho, Sistemas, Administración...";
+    } else {
+        modeSwitch.classList.remove('active'); lblCampus.classList.add('active'); lblPlanes.classList.remove('active');
+        inputBusqueda.placeholder = "Ej: Monterrey, Derecho, Diseño...";
     }
-    btnDarkMode.addEventListener('click', toggleDarkMode);
+    inputBusqueda.focus();
+    buscarInstituto();
+}
 
-    // ============================================================
-    // DATOS Y CONFIGURACIÓN — SIN CAMBIOS
-    // ============================================================
-    let datosCampus = [];
-    let datosPlanes = [];
-    const archivosA_Cargar = ['database.xlsx'];
-    let debounceTimer = null;
+function normalizarTexto(t) { return (t ?? "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim(); }
+function escapeHtml(t) {
+    return (t ?? "").toString()
+        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;").replaceAll("'","&#39;");
+}
+function obtenerLinkWiki(r) {
+    let lw = null;
+    Object.keys(r).forEach(c => { let n=c.toLowerCase().trim(); if(n.includes("wiki")||n.includes("link")||n.includes("url")) lw=r[c]; });
+    return lw;
+}
+function obtenerCarreras(r) {
+    let s="";
+    Object.keys(r).forEach(c => { let n=c.toLowerCase().trim(); if(n.includes("carrera")||n.includes("oferta")||n.includes("programa")||n.includes("licenciatura")) { if(r[c]) s+=r[c]+", "; } });
+    return s.replace(/,\s*$/,"");
+}
+function limpiarBusqueda() { inputBusqueda.value=''; }
+function actualizarBusquedaEnVivo() { if(debounceTimer) clearTimeout(debounceTimer); debounceTimer=setTimeout(buscarInstituto,220); }
 
-    let modoPlanes = false;
-    const modeSwitch = document.getElementById('modeSwitch');
-    const lblCampus = document.getElementById('lblCampus');
-    const lblPlanes = document.getElementById('lblPlanes');
-    const inputBusqueda = document.getElementById('textoBusqueda');
+/* ════════════════════════════════════════════════════════════════════
+   CARGA DE BASE DE DATOS
+   ════════════════════════════════════════════════════════════════════ */
+window.onload = async function() {
+    const status = document.getElementById('statusCarga');
+    status.innerHTML = "<span class='spinner'></span> Cargando base de datos...";
+    try {
+        const res = await fetch(archivosA_Cargar[0]);
+        if (!res.ok) throw new Error("Archivo no encontrado");
+        const buf = await res.arrayBuffer();
+        const libro = XLSX.read(new Uint8Array(buf), {type:'array'});
+        if (libro.SheetNames.length > 0) datosCampus = XLSX.utils.sheet_to_json(libro.Sheets[libro.SheetNames[0]]);
+        const hPlanes = libro.Sheets["Hoja2"] ? "Hoja2" : (libro.SheetNames[1] || null);
+        if (hPlanes && libro.Sheets[hPlanes]) datosPlanes = XLSX.utils.sheet_to_json(libro.Sheets[hPlanes]);
+        const total = datosCampus.length + datosPlanes.length;
+        if (total > 0) {
+            status.innerHTML = `🟢 DB Lista (${datosCampus.length} info | ${datosPlanes.length} planes)`;
+            document.getElementById('resultado').innerHTML = "<p style='color:var(--text-light);text-align:center;font-size:.9em;'>Listo para buscar.</p>";
+        } else throw new Error("Libro vacío");
+    } catch(e) {
+        console.error(e);
+        status.innerHTML = "🔴 Error de conexión";
+        document.getElementById('resultado').innerHTML = "<div class='resultado-vacio'>No fue posible cargar la base de datos.</div>";
+    }
+};
 
-    function toggleMode(forceMode = null) {
-        if (forceMode !== null) {
-            if (modoPlanes === forceMode) return;
-            modoPlanes = forceMode;
-        } else {
-            modoPlanes = !modoPlanes;
+/* ════════════════════════════════════════════════════════════════════
+   BÚSQUEDA
+   ════════════════════════════════════════════════════════════════════ */
+function buscarInstituto() {
+    const busquedaOriginal = inputBusqueda.value.trim();
+    const busqueda = normalizarTexto(busquedaOriginal);
+    const caja = document.getElementById('resultado');
+    if (!busqueda) { caja.innerHTML = `<p style="color:var(--text-light);text-align:center;">Por favor, ingresa una búsqueda.</p>`; return; }
+    if (!modoPlanes) {
+        if (!datosCampus.length) return (caja.innerHTML = `<p style="color:#d63031;text-align:center;">Datos de campus no disponibles.</p>`);
+        renderizarResultadosCampus(datosCampus.filter(f => normalizarTexto(f.Nombre).includes(busqueda) || normalizarTexto(obtenerCarreras(f)).includes(busqueda)), caja, busquedaOriginal);
+    } else {
+        if (!datosPlanes.length) return (caja.innerHTML = `<p style="color:#d63031;text-align:center;">Datos de planes no disponibles (Asegúrate de tener la Hoja2).</p>`);
+        renderizarResultadosPlanes(datosPlanes.filter(f => normalizarTexto(f.Carrera).includes(busqueda)), caja, busquedaOriginal);
+    }
+}
+
+function renderizarResultadosCampus(resultados, caja, busquedaOriginal) {
+    if (!resultados.length) { caja.innerHTML = `<div class="resultado-vacio">No hay resultados en Campus para "${escapeHtml(busquedaOriginal)}".</div>`; return; }
+    let html = `<p class="results-count">MOSTRANDO ${resultados.length} RESULTADO(S)</p>`;
+    resultados.forEach((e, i) => {
+        const linkWiki   = obtenerLinkWiki(e);
+        const carreras   = obtenerCarreras(e);
+        const nombre     = escapeHtml(e.Nombre || "Campus Sin Nombre");
+        const tipo       = escapeHtml(e.Tipo || "Instituto");
+        const zona       = escapeHtml(e.Zona ? `Zona ${e.Zona}` : "");
+        let card = `<div class="result-card" style="animation-delay:${Math.min(i*.05,.22)}s;">
+            <div class="instituto-info">
+                <div class="instituto-nombre">${nombre}</div>
+                <div class="meta-row">
+                    <span class="pill"><i class="fas fa-tag"></i> ${tipo}</span>
+                    ${e.Zona ? `<span class="pill"><i class="fas fa-map-marker-alt"></i> ${zona}</span>` : ""}
+                </div>
+            </div>
+            <div class="btn-actions">`;
+        if (carreras.trim()) card += `<button class="btn-wiki btn-ver-carreras" data-nombre="${nombre}" data-carreras="${escapeHtml(carreras)}">Ver carreras 🎓</button>`;
+        if (linkWiki && linkWiki.toString().trim()) {
+            let url = linkWiki.toString().trim();
+            if (!url.startsWith('http')) url = 'https://' + url;
+            /* El drawer muestra la wiki incrustada; "nueva pestaña" abre la URL original */
+            card += `<button class="btn-wiki btn-abrir-wiki" data-url="${escapeHtml(url)}" data-nombre="${nombre}">abrir wiki ↗</button>`;
+        } else if (!carreras.trim()) {
+            card += `<span class="sin-wiki">Sin links o carreras</span>`;
         }
-
-        if (modoPlanes) {
-            modeSwitch.classList.add('active');
-            lblPlanes.classList.add('active');
-            lblCampus.classList.remove('active');
-            inputBusqueda.placeholder = "Ej: Derecho, Sistemas, Administración...";
-        } else {
-            modeSwitch.classList.remove('active');
-            lblCampus.classList.add('active');
-            lblPlanes.classList.remove('active');
-            inputBusqueda.placeholder = "Ej: Monterrey, Derecho, Diseño...";
-        }
-        inputBusqueda.focus();
-        buscarInstituto();
-    }
-
-    function normalizarTexto(texto) {
-        return (texto ?? "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-    }
-
-    function escapeHtml(texto) {
-        return (texto ?? "").toString()
-            .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-            .replaceAll("\"", "&quot;").replaceAll("'", "&#39;");
-    }
-
-    function obtenerLinkWiki(encontrado) {
-        let linkWiki = null;
-        Object.keys(encontrado).forEach(columna => {
-            let nomCol = columna.toLowerCase().trim();
-            if (nomCol.includes("wiki") || nomCol.includes("link") || nomCol.includes("url")) {
-                linkWiki = encontrado[columna];
-            }
-        });
-        return linkWiki;
-    }
-
-    function obtenerCarreras(encontrado) {
-        let carrerasStr = "";
-        Object.keys(encontrado).forEach(columna => {
-            let nomCol = columna.toLowerCase().trim();
-            if (nomCol.includes("carrera") || nomCol.includes("oferta") || nomCol.includes("programa") || nomCol.includes("licenciatura")) {
-                if (encontrado[columna]) carrerasStr += encontrado[columna] + ", ";
-            }
-        });
-        return carrerasStr.replace(/,\s*$/, "");
-    }
-
-    function limpiarBusqueda() {
-        document.getElementById('textoBusqueda').value = '';
-    }
-
-    function actualizarBusquedaEnVivo() {
-        if (debounceTimer) clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => { buscarInstituto(); }, 220);
-    }
-
-    // ============================================================
-    // CARGA DE BASE DE DATOS — SIN CAMBIOS
-    // ============================================================
-    window.onload = async function() {
-        const status = document.getElementById('statusCarga');
-        status.innerHTML = "<span class='spinner'></span> Cargando base de datos...";
-        try {
-            const response = await fetch(archivosA_Cargar[0]);
-            if (!response.ok) throw new Error("Archivo no encontrado");
-
-            const arrayBuffer = await response.arrayBuffer();
-            const data = new Uint8Array(arrayBuffer);
-            const libro = XLSX.read(data, {type: 'array'});
-
-            if(libro.SheetNames.length > 0) {
-                datosCampus = XLSX.utils.sheet_to_json(libro.Sheets[libro.SheetNames[0]]);
-            }
-
-            let nombreHojaPlanes = "Hoja2";
-            if(libro.Sheets["Hoja2"]) {
-                nombreHojaPlanes = "Hoja2";
-            } else if (libro.SheetNames.length > 1) {
-                nombreHojaPlanes = libro.SheetNames[1];
-            }
-
-            if(libro.Sheets[nombreHojaPlanes]) {
-                datosPlanes = XLSX.utils.sheet_to_json(libro.Sheets[nombreHojaPlanes]);
-            }
-
-            const totalRegistros = datosCampus.length + datosPlanes.length;
-            if (totalRegistros > 0) {
-                status.innerHTML = `🟢 DB Lista (${datosCampus.length} info | ${datosPlanes.length} planes)`;
-                document.getElementById('resultado').innerHTML = "<p style='color: var(--text-light); text-align: center; font-size: 0.9em;'>Listo para buscar.</p>";
-            } else {
-                throw new Error("Libro vacío");
-            }
-        } catch (error) {
-            console.error("Error cargando archivo", error);
-            status.innerHTML = "🔴 Error de conexión";
-            document.getElementById('resultado').innerHTML = "<div class='resultado-vacio'>No fue posible cargar la base de datos.</div>";
-        }
-    };
-
-    // ============================================================
-    // BÚSQUEDA — SIN CAMBIOS
-    // ============================================================
-    function buscarInstituto() {
-        const busquedaOriginal = document.getElementById('textoBusqueda').value.trim();
-        const busqueda = normalizarTexto(busquedaOriginal);
-        const caja = document.getElementById('resultado');
-
-        if (busqueda === "") {
-            caja.innerHTML = `<p style="color:var(--text-light); text-align:center;">Por favor, ingresa una búsqueda.</p>`;
-            return;
-        }
-
-        if (!modoPlanes) {
-            if(datosCampus.length === 0) return caja.innerHTML = `<p style="color:#d63031; text-align:center;">Datos de campus no disponibles.</p>`;
-            const resultados = datosCampus.filter(fila => {
-                const nombreCampus = normalizarTexto(fila.Nombre);
-                const carrerasCampus = normalizarTexto(obtenerCarreras(fila));
-                return nombreCampus.includes(busqueda) || carrerasCampus.includes(busqueda);
-            });
-            renderizarResultadosCampus(resultados, caja, busquedaOriginal);
-        } else {
-            if(datosPlanes.length === 0) return caja.innerHTML = `<p style="color:#d63031; text-align:center;">Datos de planes no disponibles (Asegúrate de tener la Hoja2).</p>`;
-            const resultados = datosPlanes.filter(fila => {
-                const nombreCarrera = normalizarTexto(fila.Carrera);
-                return nombreCarrera.includes(busqueda);
-            });
-            renderizarResultadosPlanes(resultados, caja, busquedaOriginal);
-        }
-    }
-
-    // ============================================================
-    // RENDERIZADO CAMPUS
-    // Único cambio: btn wiki ahora usa data-attrs y abre el panel.
-    // Todo lo demás es idéntico al original.
-    // ============================================================
-    function renderizarResultadosCampus(resultados, caja, busquedaOriginal) {
-        if (resultados.length > 0) {
-            let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} RESULTADO(S)</p>`;
-            resultados.forEach((encontrado, idx) => {
-                let linkWiki = obtenerLinkWiki(encontrado);
-                let carrerasInfo = obtenerCarreras(encontrado);
-                const nombreHtml = escapeHtml(encontrado.Nombre || "Campus Sin Nombre");
-                const tipoHtml = escapeHtml(encontrado.Tipo || "Instituto");
-                const zonaHtml = escapeHtml(encontrado.Zona ? `Zona ${encontrado.Zona}` : "");
-
-                let htmlResultado = `
-                    <div class="result-card" style="animation-delay:${Math.min(idx * 0.05, 0.22)}s;">
-                        <div class="instituto-info">
-                            <div class="instituto-nombre">${nombreHtml}</div>
-                            <div class="meta-row">
-                                <span class="pill"><i class="fas fa-tag"></i> ${tipoHtml}</span>
-                                ${encontrado.Zona ? `<span class="pill"><i class="fas fa-map-marker-alt"></i> ${zonaHtml}</span>` : ""}
-                            </div>
-                        </div>
-                        <div class="btn-actions">
-                `;
-
-                if(carrerasInfo && carrerasInfo.trim() !== "") {
-                    htmlResultado += `<button class="btn-wiki btn-ver-carreras" data-nombre="${nombreHtml}" data-carreras="${escapeHtml(carrerasInfo)}">Ver carreras 🎓</button>`;
-                }
-
-                // ★ CAMBIO: en lugar de <a target="_blank">, se usa un <button>
-                //   que abre el wiki panel lateral mediante data attributes.
-                //   El texto y estilo (btn-wiki) son idénticos al original.
-                if (linkWiki && linkWiki.toString().trim() !== "") {
-                    let urlFinal = linkWiki.toString().trim();
-                    if (!urlFinal.startsWith('http')) urlFinal = 'https://' + urlFinal;
-                    htmlResultado += `<button class="btn-wiki btn-abrir-wiki"
-                                              data-url="${escapeHtml(urlFinal)}"
-                                              data-nombre="${nombreHtml}">abrir wiki ↗</button>`;
-                } else if (!carrerasInfo || carrerasInfo.trim() === "") {
-                    htmlResultado += `<span class="sin-wiki">Sin links o carreras</span>`;
-                }
-
-                htmlResultado += `</div></div>`;
-                htmlTotal += htmlResultado;
-            });
-            caja.innerHTML = htmlTotal;
-            asignarEventosCarreras();
-            asignarEventosWiki(); // ★ nuevo: conecta los botones del wiki panel
-            animarTarjetas();
-        } else {
-            caja.innerHTML = `<div class="resultado-vacio">No hay resultados en Campus para "${escapeHtml(busquedaOriginal)}".</div>`;
-        }
-    }
-
-    // ============================================================
-    // RENDERIZADO PLANES — SIN CAMBIOS
-    // ============================================================
-    function renderizarResultadosPlanes(resultados, caja, busquedaOriginal) {
-        if (resultados.length > 0) {
-            let htmlTotal = `<p class="results-count">MOSTRANDO ${resultados.length} PLAN(ES) DE ESTUDIO</p>`;
-            resultados.forEach((encontrado, idx) => {
-                const nombreCarrera = escapeHtml(encontrado.Carrera || "Carrera sin especificar");
-                const linkPlan = encontrado.Link_Plan || "";
-
-                let htmlResultado = `
-                    <div class="result-card" style="animation-delay:${Math.min(idx * 0.05, 0.22)}s; border-left: 4px solid var(--primary);">
-                        <div class="instituto-info">
-                            <div class="instituto-nombre">📄 ${nombreCarrera}</div>
-                        </div>
-                        <div class="btn-actions">
-                `;
-
-                if (linkPlan.trim() !== "") {
-                    let urlFinal = linkPlan.toString().trim();
-                    if (!urlFinal.startsWith('http')) urlFinal = 'https://' + urlFinal;
-
-                    let downloadLink = urlFinal;
-                    if (downloadLink.includes('web=1')) {
-                        downloadLink = downloadLink.replace('web=1', 'download=1');
-                    } else {
-                        downloadLink += downloadLink.includes('?') ? '&download=1' : '?download=1';
-                    }
-
-                    htmlResultado += `
-                        <a href="${escapeHtml(urlFinal)}" target="_blank" onclick="limpiarBusqueda()" class="btn-secondary">
-                            <i class="fa-regular fa-eye"></i> Ver
-                        </a>
-                        <a href="${escapeHtml(downloadLink)}" target="_blank" onclick="limpiarBusqueda()" class="btn-wiki">
-                            <i class="fa-solid fa-download"></i> Descargar
-                        </a>
-                    `;
-                } else {
-                    htmlResultado += `<span class="sin-wiki">Link no disponible</span>`;
-                }
-
-                htmlResultado += `</div></div>`;
-                htmlTotal += htmlResultado;
-            });
-            caja.innerHTML = htmlTotal;
-            animarTarjetas();
-        } else {
-            caja.innerHTML = `<div class="resultado-vacio">No hay planes de estudio para "${escapeHtml(busquedaOriginal)}".</div>`;
-        }
-    }
-
-    function animarTarjetas() {
-        requestAnimationFrame(() => {
-            document.querySelectorAll('.result-card').forEach(card => card.classList.add('show'));
-        });
-    }
-
-    // ============================================================
-    // MODAL CARRERAS — SIN CAMBIOS
-    // ============================================================
-    function asignarEventosCarreras() {
-        document.querySelectorAll('.btn-ver-carreras').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                abrirModalCarreras(e.target.getAttribute('data-nombre'), e.target.getAttribute('data-carreras'));
-            });
-        });
-    }
-
-    function abrirModalCarreras(nombreCampus, carrerasStr) {
-        const modal = document.getElementById('modalCarreras');
-        const title = document.getElementById('modalTitle');
-        const list = document.getElementById('modalList');
-        title.textContent = `Carreras en ${nombreCampus}`;
-        list.innerHTML = "";
-        let carrerasArray = carrerasStr.split(',').map(c => c.trim()).filter(c => c);
-        if(carrerasArray.length > 0) {
-            carrerasArray.forEach(carrera => {
-                const li = document.createElement('li');
-                li.textContent = carrera;
-                list.appendChild(li);
-            });
-        } else {
-            list.innerHTML = "<li>No hay información detallada de las carreras.</li>";
-        }
-        modal.style.display = 'flex';
-        setTimeout(() => modal.classList.add('active'), 10);
-    }
-    function cerrarModalCarreras() {
-        const modal = document.getElementById('modalCarreras');
-        modal.classList.remove('active');
-        setTimeout(() => modal.style.display = 'none', 300);
-    }
-    document.getElementById('modalCarreras').addEventListener('click', (e) => {
-        if(e.target === document.getElementById('modalCarreras')) cerrarModalCarreras();
+        card += `</div></div>`;
+        html += card;
     });
+    caja.innerHTML = html;
+    asignarEventosCarreras();
+    asignarEventosWiki();
+    animarTarjetas();
+}
 
-    // ============================================================
-    // MODAL FEEDBACK — SIN CAMBIOS
-    // ============================================================
-    const modalFeedback = document.getElementById('modalFeedback');
-    const formularioFeedback = document.getElementById('formularioFeedback');
-    const btnEnviarMensaje = document.getElementById('btnEnviarMensaje');
-    const mensajeEstado = document.getElementById('mensajeEstado');
-
-    document.getElementById('btnAbrirFeedback').addEventListener('click', () => {
-        modalFeedback.style.display = 'flex';
-        setTimeout(() => modalFeedback.classList.add('active'), 10);
+function renderizarResultadosPlanes(resultados, caja, busquedaOriginal) {
+    if (!resultados.length) { caja.innerHTML = `<div class="resultado-vacio">No hay planes de estudio para "${escapeHtml(busquedaOriginal)}".</div>`; return; }
+    let html = `<p class="results-count">MOSTRANDO ${resultados.length} PLAN(ES) DE ESTUDIO</p>`;
+    resultados.forEach((e, i) => {
+        const nombre  = escapeHtml(e.Carrera || "Carrera sin especificar");
+        const linkPlan = e.Link_Plan || "";
+        let card = `<div class="result-card" style="animation-delay:${Math.min(i*.05,.22)}s;border-left:4px solid var(--primary);">
+            <div class="instituto-info"><div class="instituto-nombre">📄 ${nombre}</div></div>
+            <div class="btn-actions">`;
+        if (linkPlan.trim()) {
+            let url  = linkPlan.toString().trim();
+            if (!url.startsWith('http')) url = 'https://' + url;
+            let dl = url.includes('web=1') ? url.replace('web=1','download=1') : url + (url.includes('?') ? '&' : '?') + 'download=1';
+            card += `<a href="${escapeHtml(url)}" target="_blank" onclick="limpiarBusqueda()" class="btn-secondary"><i class="fa-regular fa-eye"></i> Ver</a>
+                     <a href="${escapeHtml(dl)}"  target="_blank" onclick="limpiarBusqueda()" class="btn-wiki"><i class="fa-solid fa-download"></i> Descargar</a>`;
+        } else card += `<span class="sin-wiki">Link no disponible</span>`;
+        card += `</div></div>`;
+        html += card;
     });
-    function cerrarModalFeedback() {
-        modalFeedback.classList.remove('active');
-        setTimeout(() => {
-            modalFeedback.style.display = 'none';
-            mensajeEstado.style.display = 'none';
-        }, 300);
-    }
-    modalFeedback.addEventListener('click', (e) => {
-        if(e.target === modalFeedback) cerrarModalFeedback();
+    caja.innerHTML = html;
+    animarTarjetas();
+}
+
+function animarTarjetas() { requestAnimationFrame(() => document.querySelectorAll('.result-card').forEach(c => c.classList.add('show'))); }
+
+/* ════════════════════════════════════════════════════════════════════
+   MODAL CARRERAS
+   ════════════════════════════════════════════════════════════════════ */
+function asignarEventosCarreras() {
+    document.querySelectorAll('.btn-ver-carreras').forEach(b => b.addEventListener('click', e => abrirModalCarreras(e.target.dataset.nombre, e.target.dataset.carreras)));
+}
+function abrirModalCarreras(nombre, carrerasStr) {
+    const m = document.getElementById('modalCarreras');
+    document.getElementById('modalTitle').textContent = `Carreras en ${nombre}`;
+    const list = document.getElementById('modalList');
+    list.innerHTML = "";
+    carrerasStr.split(',').map(c => c.trim()).filter(Boolean).forEach(c => { const li=document.createElement('li'); li.textContent=c; list.appendChild(li); });
+    if (!list.children.length) list.innerHTML = "<li>No hay información detallada.</li>";
+    m.style.display='flex'; setTimeout(() => m.classList.add('active'),10);
+}
+function cerrarModalCarreras() { const m=document.getElementById('modalCarreras'); m.classList.remove('active'); setTimeout(() => m.style.display='none',300); }
+document.getElementById('modalCarreras').addEventListener('click', e => { if(e.target===document.getElementById('modalCarreras')) cerrarModalCarreras(); });
+
+/* ════════════════════════════════════════════════════════════════════
+   MODAL FEEDBACK
+   ════════════════════════════════════════════════════════════════════ */
+const modalFeedback     = document.getElementById('modalFeedback');
+const formularioFeedback = document.getElementById('formularioFeedback');
+const mensajeEstado     = document.getElementById('mensajeEstado');
+document.getElementById('btnAbrirFeedback').addEventListener('click', () => { modalFeedback.style.display='flex'; setTimeout(() => modalFeedback.classList.add('active'),10); });
+function cerrarModalFeedback() { modalFeedback.classList.remove('active'); setTimeout(() => { modalFeedback.style.display='none'; mensajeEstado.style.display='none'; },300); }
+modalFeedback.addEventListener('click', e => { if(e.target===modalFeedback) cerrarModalFeedback(); });
+formularioFeedback.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btnEnviarMensaje');
+    btn.textContent="Enviando..."; btn.disabled=true; mensajeEstado.style.display="none";
+    try {
+        const r = await fetch(formularioFeedback.action, { method: formularioFeedback.method, body: new FormData(formularioFeedback), headers:{'Accept':'application/json'} });
+        if (r.ok) {
+            mensajeEstado.textContent="¡Mensaje enviado con éxito! Gracias.";
+            mensajeEstado.style.color="#27ae60"; mensajeEstado.style.display="block";
+            formularioFeedback.reset(); setTimeout(cerrarModalFeedback, 3000);
+        } else { mensajeEstado.textContent="Hubo un problema. Intenta de nuevo."; mensajeEstado.style.color="#e74c3c"; mensajeEstado.style.display="block"; }
+    } catch { mensajeEstado.textContent="Error de conexión."; mensajeEstado.style.color="#e74c3c"; mensajeEstado.style.display="block"; }
+    finally { btn.textContent="Enviar Mensaje"; btn.disabled=false; }
+});
+
+/* ════════════════════════════════════════════════════════════════════
+   WIKI PANEL — Lógica del drawer
+   ════════════════════════════════════════════════════════════════════ */
+const wikiOverlay = document.getElementById('wikiPanelOverlay');
+const wikiTitle   = document.getElementById('wikiPanelTitle');
+const wikiExtLink = document.getElementById('btnWikiExternal');
+
+function asignarEventosWiki() {
+    document.querySelectorAll('.btn-abrir-wiki').forEach(btn => {
+        btn.addEventListener('click', () => abrirWikiPanel(btn.dataset.url, btn.dataset.nombre));
     });
-    formularioFeedback.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const data = new FormData(formularioFeedback);
-        btnEnviarMensaje.textContent = "Enviando..."; btnEnviarMensaje.disabled = true; mensajeEstado.style.display = "none";
-        try {
-            const response = await fetch(formularioFeedback.action, {
-                method: formularioFeedback.method, body: data, headers: { 'Accept': 'application/json' }
-            });
-            if (response.ok) {
-                mensajeEstado.textContent = "¡Mensaje enviado con éxito! Gracias por tu opinión.";
-                mensajeEstado.style.color = "#27ae60"; mensajeEstado.style.display = "block";
-                formularioFeedback.reset();
-                setTimeout(() => { cerrarModalFeedback(); }, 3000);
-            } else {
-                mensajeEstado.textContent = "Hubo un problema al enviar. Intenta de nuevo.";
-                mensajeEstado.style.color = "#e74c3c"; mensajeEstado.style.display = "block";
-            }
-        } catch (error) {
-            mensajeEstado.textContent = "Error de conexión. Revisa tu internet.";
-            mensajeEstado.style.color = "#e74c3c"; mensajeEstado.style.display = "block";
-        } finally {
-            btnEnviarMensaje.textContent = "Enviar Mensaje"; btnEnviarMensaje.disabled = false;
-        }
-    });
+}
 
-    // ============================================================
-    // ★ WIKI PANEL — LÓGICA NUEVA (cero líneas modificadas arriba)
-    // ============================================================
-    const wikiOverlay  = document.getElementById('wikiPanelOverlay');
-    const wikiIframe   = document.getElementById('wikiIframe');
-    const wikiTitle    = document.getElementById('wikiPanelTitle');
-    const wikiExtLink  = document.getElementById('btnWikiExternal');
-    const wikiLoader   = document.getElementById('wikiLoader');
-    let   wikiReady    = false; // bandera para ignorar el load inicial de about:blank
+function abrirWikiPanel(url, nombre) {
+    /* Actualiza cabecera del drawer */
+    wikiTitle.textContent = nombre || 'Campus Monterrey';
+    wikiExtLink.href = url || 'wiki_campus_monterrey.html';
 
-    /** Asigna los listeners a los botones generados dinámicamente */
-    function asignarEventosWiki() {
-        document.querySelectorAll('.btn-abrir-wiki').forEach(btn => {
-            btn.addEventListener('click', () => {
-                abrirWikiPanel(
-                    btn.getAttribute('data-url'),
-                    btn.getAttribute('data-nombre')
-                );
-            });
-        });
-    }
+    /* Resetea el scroll del wiki al abrir */
+    const wk = document.querySelector('.wk');
+    if (wk) wk.scrollTop = 0;
 
-    /** Abre el drawer lateral con la URL del wiki */
-    function abrirWikiPanel(url, nombre) {
-        // 1. Actualizar cabecera
-        wikiTitle.textContent = nombre || 'Wiki del Campus';
-        wikiExtLink.href      = url;
+    /* Abre con animación */
+    wikiOverlay.style.display = 'flex';
+    requestAnimationFrame(() => requestAnimationFrame(() => wikiOverlay.classList.add('active')));
+    document.body.style.overflow = 'hidden';
+}
 
-        // 2. Mostrar loader, resetear iframe
-        wikiReady = false;
-        wikiLoader.classList.remove('hidden');
-        wikiIframe.src = 'about:blank';
+function cerrarWikiPanel() {
+    wikiOverlay.classList.remove('active');
+    setTimeout(() => { wikiOverlay.style.display='none'; document.body.style.overflow=''; }, 430);
+}
 
-        // 3. Abrir overlay con animación de fade + slide
-        wikiOverlay.style.display = 'flex';
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                wikiOverlay.classList.add('active');
-            });
-        });
+/* Cerrar al hacer clic en el backdrop */
+wikiOverlay.addEventListener('click', e => { if (e.target === wikiOverlay) cerrarWikiPanel(); });
 
-        // 4. Bloquear scroll del body (el panel ocupa toda la pantalla en móvil)
-        document.body.style.overflow = 'hidden';
+/* ════════════════════════════════════════════════════════════════════
+   WIKI — Navegación de tabs (función scoped al contenedor .wk)
+   ════════════════════════════════════════════════════════════════════ */
+function wkShowTab(id, btn) {
+    const wk = document.querySelector('.wk');
+    wk.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    wk.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('wk-panel-' + id).classList.add('active');
+    btn.classList.add('active');
+}
+function selectCampus(id, btn) {
+    document.querySelector('.wk').querySelectorAll('.campus-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
 
-        // 5. Cargar URL después de que la animación haya comenzado
-        setTimeout(() => {
-            wikiReady = true;
-            wikiIframe.src = url;
-        }, 150);
-    }
+/* ════════════════════════════════════════════════════════════════════
+   EVENTOS GLOBALES
+   ════════════════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+    if (e.key === "Escape") { cerrarModalCarreras(); cerrarModalFeedback(); cerrarWikiPanel(); }
+});
+inputBusqueda.addEventListener('input', actualizarBusquedaEnVivo);
+inputBusqueda.addEventListener('keydown', e => { if (e.key==='Enter') buscarInstituto(); });
+document.getElementById('btnBuscar').addEventListener('mousedown', function() { this.style.transform='translateY(0) scale(.99)'; });
+document.getElementById('btnBuscar').addEventListener('mouseup',   function() { this.style.transform=''; });
 
-    /** Cierra el drawer lateral con animación inversa */
-    function cerrarWikiPanel() {
-        wikiOverlay.classList.remove('active');
-        setTimeout(() => {
-            wikiOverlay.style.display  = 'none';
-            wikiReady                  = false;
-            wikiIframe.src             = 'about:blank';
-            document.body.style.overflow = '';
-        }, 430);
-    }
-
-    /** Oculta el spinner cuando el iframe termina de cargar */
-    wikiIframe.addEventListener('load', () => {
-        if (wikiReady) {
-            wikiLoader.classList.add('hidden');
-        }
-    });
-
-    /** Cerrar al hacer clic en el backdrop (fuera del panel) */
-    wikiOverlay.addEventListener('click', (e) => {
-        if (e.target === wikiOverlay) cerrarWikiPanel();
-    });
-
-    // ============================================================
-    // EVENTOS GLOBALES — SIN CAMBIOS + ESC para wiki panel
-    // ============================================================
-    document.addEventListener('keydown', (e) => {
-        if (e.key === "Escape") {
-            cerrarModalCarreras();
-            cerrarModalFeedback();
-            cerrarWikiPanel(); // ★ nuevo: ESC también cierra el wiki panel
-        }
-    });
-
-    document.getElementById('textoBusqueda').addEventListener('input', actualizarBusquedaEnVivo);
-    document.getElementById('textoBusqueda').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') buscarInstituto();
-    });
-    document.getElementById('btnBuscar').addEventListener('mousedown', function() { this.style.transform = 'translateY(0) scale(0.99)'; });
-    document.getElementById('btnBuscar').addEventListener('mouseup', function() { this.style.transform = ''; });
-
-    /* BOTÓN DE AYUDA — SIN CAMBIOS */
-    const helpBtn = document.getElementById('helpBtn');
-    const helpBox = document.getElementById('helpBox');
-    helpBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        helpBox.style.display = helpBox.style.display === 'block' ? 'none' : 'block';
-    });
-    document.addEventListener('click', function(e) {
-        const helpContainer = document.querySelector('.help-container');
-        if (!helpContainer.contains(e.target)) helpBox.style.display = 'none';
-    });
+/* Botón de ayuda */
+const helpBtn = document.getElementById('helpBtn');
+const helpBox = document.getElementById('helpBox');
+helpBtn.addEventListener('click', e => { e.stopPropagation(); helpBox.style.display = helpBox.style.display==='block' ? 'none' : 'block'; });
+document.addEventListener('click', e => { if (!document.querySelector('.help-container').contains(e.target)) helpBox.style.display='none'; });
 </script>
 </body>
 </html>
